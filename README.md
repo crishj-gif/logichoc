@@ -1,0 +1,2 @@
+# logichoc
+Vô cùng hay
