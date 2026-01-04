@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trắc Nghiệm Logic Học </title>
+    <title>Trắc Nghiệm Logic Học Đại Cương (233 Câu)</title>
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,16 +23,17 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Ngăn cuộn body chính, chỉ cuộn các thành phần con */
+            overflow: hidden;
         }
 
-        /* Math Font */
-        .math-content {
-            font-family: 'Times New Roman', serif;
+        /* MathJax sẽ tự xử lý font toán học, ta không ép font Times New Roman cho text thường nữa */
+        .question-text {
             font-size: 1.1em;
+            line-height: 1.6;
+            color: #1f2937;
         }
 
-        /* Custom Scrollbar for Sidebar & Main */
+        /* Custom Scrollbar */
         .custom-scroll::-webkit-scrollbar {
             width: 6px;
         }
@@ -77,8 +78,8 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            z-index: 50; /* Z-index cao để nổi lên trên */
-            background: rgba(17, 24, 39, 0.95); /* Tối hơn chút để dễ đọc */
+            z-index: 50;
+            background: rgba(17, 24, 39, 0.95);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -171,7 +172,6 @@
             visibility: visible;
         }
 
-        /* Button Colors */
         .btn-phone { background: linear-gradient(135deg, #4ade80, #15803d); box-shadow: 0 4px 10px rgba(22, 163, 74, 0.4); }
         .btn-facebook { background: linear-gradient(135deg, #18ACFE, #0163E0); box-shadow: 0 4px 10px rgba(1, 99, 224, 0.4); }
         .btn-tiktok { background: linear-gradient(135deg, #374151, #000000); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); border: 1px solid #4b5563; }
@@ -190,7 +190,6 @@
                 padding-bottom: 5px;
             }
             .sc-social-btn { width: 35px; height: 35px; font-size: 16px; }
-            /* Thêm padding cho body để tránh footer che mất nội dung trên mobile */
         }
     </style>
 
@@ -199,10 +198,15 @@
         MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
             },
             svg: {
                 fontCache: 'global'
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
             }
         };
     </script>
@@ -213,9 +217,8 @@
     <!-- Mobile Header -->
     <div class="md:hidden bg-white shadow-sm p-4 flex justify-between items-center z-40 relative border-b border-gray-200">
         <div class="flex items-center gap-3">
-            <!-- Logo MTA cho Mobile -->
-            <img src="https://upload.wikimedia.org/wikipedia/vi/0/0e/Logo_MTA_new.png?20210714150039" alt="Logo MTA" class="w-[100px] h-[100px] object-contain flex-shrink-0">
-            <h1 class="font-bold text-gray-800 text-lg">Logic Học</h1>
+            <img src="https://upload.wikimedia.org/wikipedia/vi/0/0e/Logo_MTA_new.png?20210714150039" alt="Logo MTA" class="w-[50px] h-[50px] object-contain flex-shrink-0">
+            <h1 class="font-bold text-gray-800 text-lg">Logic Học (233 Câu)</h1>
         </div>
         <button id="menuBtn" class="p-2 text-gray-600 hover:bg-gray-100 rounded focus:outline-none">
             <i class="fas fa-bars text-xl"></i>
@@ -224,16 +227,14 @@
 
     <!-- Sidebar (Question List) -->
     <aside id="sidebar" class="transform -translate-x-full md:translate-x-0 fixed md:relative z-30 w-72 h-full bg-white border-r border-gray-200 flex flex-col transition-transform duration-300 ease-in-out shadow-lg md:shadow-none">
-        <!-- Sidebar Header -->
         <div class="p-5 border-b border-gray-200 bg-gray-50 flex flex-col items-center">
-            <!-- Logo MTA cho Desktop -->
-            <img src="https://upload.wikimedia.org/wikipedia/vi/0/0e/Logo_MTA_new.png?20210714150039" alt="Logo MTA" class="w-[100px] h-[100px] object-contain mb-3">
+            <img src="https://upload.wikimedia.org/wikipedia/vi/0/0e/Logo_MTA_new.png?20210714150039" alt="Logo MTA" class="w-[80px] h-[80px] object-contain mb-3">
             
             <div class="w-full">
-                <h2 class="text-xl font-bold text-gray-800">Danh Sách Câu Hỏi</h2>
+                <h2 class="text-xl font-bold text-gray-800 text-center">Danh Sách Câu Hỏi</h2>
                 <div class="mt-2 text-sm text-gray-600 flex justify-between items-center">
                     <span>Tiến độ: <span id="progress-text" class="font-bold text-blue-600">0%</span></span>
-                    <span>Điểm: <span id="score-text" class="font-bold text-green-600">0</span></span>
+                    <span>Đúng: <span id="score-text" class="font-bold text-green-600">0</span></span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2 overflow-hidden">
                     <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -241,15 +242,13 @@
             </div>
         </div>
         
-        <!-- Sidebar Content (Scrollable) -->
         <div class="flex-1 overflow-y-auto p-4 custom-scroll bg-white">
             <div id="question-grid" class="grid grid-cols-5 gap-2">
                 <!-- Grid items generated by JS -->
             </div>
         </div>
 
-        <!-- Sidebar Footer -->
-        <div class="p-4 border-t border-gray-200 bg-gray-50 mb-16 md:mb-0"> <!-- Margin bottom on mobile to avoid overlap with footer if needed, but sidebar is above content usually -->
+        <div class="p-4 border-t border-gray-200 bg-gray-50 mb-16 md:mb-0">
             <button onclick="resetQuiz()" class="w-full py-2.5 px-4 bg-gray-800 hover:bg-gray-900 text-white rounded-lg font-medium transition-colors shadow-sm flex items-center justify-center gap-2">
                 <i class="fas fa-redo-alt"></i> Làm Lại Bài
             </button>
@@ -258,14 +257,10 @@
 
     <!-- Main Content -->
     <main class="flex-1 h-full overflow-y-auto bg-gray-50 p-4 md:p-8 relative custom-scroll" id="main-content">
-        <div class="max-w-4xl mx-auto pb-32"> <!-- pb-32: Padding bottom lớn để tránh Footer che nội dung -->
-            
-     
-
+        <div class="max-w-4xl mx-auto pb-32">
             <div id="quiz-container" class="space-y-6">
                 <!-- Questions injected by JS -->
             </div>
-
         </div>
     </main>
 
@@ -275,32 +270,22 @@
     <!-- Footer -->
     <footer class="sc-contact-footer">
         <div class="sc-footer-container">
-            <!-- Góc Trái: Text -->
             <div class="sc-left-content">
                 <span>Design by <span class="sc-brand-name">Sơn Cris</span></span>
             </div>
-
-            <!-- Góc Phải: Icons -->
             <div class="sc-right-content">
-                <!-- SĐT -->
                 <a href="tel:0327208690" class="sc-social-btn btn-phone">
                     <i class="fas fa-phone-alt"></i>
                     <span class="sc-tooltip">0327.208.690</span>
                 </a>
-
-                <!-- Facebook -->
                 <a href="https://web.facebook.com/sonsadboiz.12" target="_blank" class="sc-social-btn btn-facebook">
                     <i class="fab fa-facebook-f"></i>
                     <span class="sc-tooltip">Facebook</span>
                 </a>
-
-                <!-- TikTok -->
                 <a href="https://www.tiktok.com/@chubodoihaybuon" target="_blank" class="sc-social-btn btn-tiktok">
                     <i class="fab fa-tiktok"></i>
                     <span class="sc-tooltip">TikTok</span>
                 </a>
-
-                <!-- Instagram -->
                 <a href="https://www.instagram.com/son_cris3012/?__pwa=1" target="_blank" class="sc-social-btn btn-instagram">
                     <i class="fab fa-instagram"></i>
                     <span class="sc-tooltip">Instagram</span>
@@ -310,1113 +295,266 @@
     </footer>
 
 <script>
-// --- DỮ LIỆU CÂU HỎI (GIỮ NGUYÊN 100%) ---
-const questions = [
-    {
-        id: 1,
-        question: "Đối tượng của logic học là gì?",
-        options: [
-            "Nhận thức.",
-            "Tính chân lý của tư tưởng.",
-            "Tư duy.",
-            "Kết cấu và quy luật của tư duy."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 2,
-        question: "Tư duy có những đặc tính nào?",
-        options: [
-            "Cụ thể, sinh động, trừu tượng, khái quát.",
-            "Gián tiếp, năng động - sáng tạo, sinh động và sâu sắc.",
-            "Trực tiếp, liên hệ với ngôn ngữ, trừu tượng, khái quát, sâu sắc.",
-            "Gián tiếp, năng động - sáng tạo, trừu tượng, khái quát, sâu sắc."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 3,
-        question: "Mệnh đề nào sau đây đúng?",
-        options: [
-            "Tư duy càng trừu tượng thì càng khái quát.",
-            "Tư duy càng trừu tượng thì càng chính xác.",
-            "Tư duy càng khái quát thì càng gián tiếp và đúng đắn.",
-            "Tư duy càng khái quát thì càng gián tiếp, càng trừu tượng, càng đúng đắn, càng năng động - sáng tạo."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 4,
-        question: "Hình thức tư duy, kết cấu logic của tư tưởng là gì?",
-        options: [
-            "Những cái tiên nghiệm.",
-            "Hai cái hoàn toàn khác nhau.",
-            "Một bộ phận của nội dung tư tưởng.",
-            "Những sơ đồ, công thức, ký hiệu do con người đặt ra để dễ dàng diễn đạt nội dung tư tưởng."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 5,
-        question: "Bổ sung để có một câu đúng của V.I.Lênin: “Những hình thức logic và những quy luật logic không phải là cái vỏ trống rỗng mà là... của thế giới khách quan”.",
-        options: [
-            "sản phẩm.",
-            "công cụ nhận thức.",
-            "phản ánh.",
-            "nguồn gốc."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 6,
-        question: "Quy luật tư duy (quy luật logic của tư tưởng) là gì?",
-        options: [
-            "Mối liên hệ bản chất, tất yếu, khách quan giữa các tư tưởng.",
-            "Cái chi phối các kết cấu của tư tưởng để đảm bảo cho tư tưởng phản ánh đúng đối tượng được tư tưởng.",
-            "Các yêu cầu đối với tư duy để tư duy phù hợp với hiện thực.",
-            "A), B), C) đều đúng."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 7,
-        question: "Từ “logic” trong tiếng Việt có nghĩa là gì?",
-        options: [
-            "Mối liên hệ mang tính tất yếu giữa các sự vật, hiện tượng trong hiện thực khách quan.",
-            "Mối liên hệ mang tính tất yếu giữa những ý nghĩ, tư tưởng trong hiện thực chủ quan.",
-            "logic học.",
-            "A), B), C) đều đúng."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 8,
-        question: "logic học là gì?",
-        options: [
-            "Khoa học về tư duy.",
-            "Môn học nghiên cứu các hình thức và quy luật của tư duy.",
-            "Môn học nhằm làm trong sáng đầu óc.",
-            "Khoa học vạch ra sự phù hợp của tư tưởng với tư tưởng."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 9,
-        question: "Bổ sung từ còn thiếu để có một câu đúng: “Vấn đề về tính chân lý của tư duy là vấn đề ...”.",
-        options: [
-            "cơ bản của logic học.",
-            "nói về sự phù hợp của tư tưởng với thực tại.",
-            "nói về sự phù hợp của tư tưởng với tư tưởng.",
-            "cơ bản của mọi hoạt động nhận thức của con người."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 10,
-        question: "Nhiệm vụ của logic học là gì?",
-        options: [
-            "Vạch ra các hình thức và quy luật của tư duy logic.",
-            "Vạch ra các hình thức và quy luật của tư duy biện chứng.",
-            "Vạch ra tính chân lý của tư tưởng.",
-            "Vạch ra các kết cấu của tư tưởng, các sơ đồ của lập luận, các quy tắc, phương pháp chi phối chúng."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 11,
-        question: "Bổ sung từ còn thiếu để có một câu đúng: “logic học (LG) được chia thành...”",
-        options: [
-            "LG biện chứng, LG hình thức và LG toán.",
-            "LG lưỡng trị, LG đa trị và LG mở.",
-            "LG cổ điển và LG phi cổ điển.",
-            "A), B), C) đều đúng."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 12,
-        question: "Khi khảo sát một tư tưởng, logic hình thức chủ yếu làm gì?",
-        options: [
-            "Chỉ để ý đến hình thức của tư tưởng.",
-            "Chỉ để ý đến nội dung của tư tưởng.",
-            "Vừa để ý đến nội dung, vừa để ý đến hình thức của tư tưởng.",
-            "Tuỳ từng trường hợp mà để ý đến nội dung, hình thức hay để ý đến cả hai."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 13,
-        question: "Quy luật đồng nhất phản ánh điều gì trong hiện thực?",
-        options: [
-            "Sự đứng im tương đối, sự ổn định về chất của đối tượng được tư tưởng.",
-            "Sự đồng nhất tư tưởng với đối tượng được tư tưởng.",
-            "Tính bất biến của đối tượng được tư tưởng.",
-            "Cả A), B) và C)."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 14,
-        question: "Quy luật lý do đầy đủ phản ánh điều gì trong hiện thực?",
-        options: [
-            "Tính chứng minh được của tư tưởng.",
-            "Mối liên hệ phổ biến của sự vật, hiện tượng.",
-            "Mối liên hệ nhân quả chi phối giữa các đối tượng được tư tưởng.",
-            "Cơ sở dẫn tới sự đứng im tương đối, sự ổn định về chất của đối tượng được tư tưởng."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 15,
-        question: "“Hai tư tưởng trái ngược nhau không cùng đúng” là phát biểu của quy luật (QL) nào?",
-        options: [
-            "QL Loại trừ cái thứ ba.",
-            "QL Phi mâu thuẫn.",
-            "QL Đồng nhất.",
-            "QL Lý do đầy đủ."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 16,
-        question: "Mệnh đề “Hai tư tưởng (TT) không cùng đúng” tương đương logic với mệnh đề nào?",
-        options: [
-            "Hai TT không thể cùng sai.",
-            "Hai TT, trong đó, nếu TT này đúng thì TT còn lại sai.",
-            "Hai TT, trong đó, nếu TT này sai thì TT còn lại đúng.",
-            "Hai TT, trong đó, nếu TT này đúng thì TT kia sai, và nếu TT này sai thì TT kia đúng."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 17,
-        question: "“Hai tư tưởng mâu thuẫn nhau không thể đồng thời cùng đúng, cùng sai” là phát biểu của quy luật nào?",
-        options: [
-            "QL Phi mâu thuẫn.",
-            "QL Loại trừ cái thứ ba.",
-            "QL Đồng nhất.",
-            "QL Lý do đầy đủ."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 18,
-        question: "Nếu a là một tư tưởng thì mệnh đề “Một tư tưởng không thể đồng thời có hai giá trị logic trái ngược nhau” được kí hiệu như thế nào?",
-        options: [
-            "$\\neg(a \\wedge \\neg a)$",
-            "$\\neg(a \\vee \\neg a)$",
-            "$a \\vee \\neg a$",
-            "$a \\wedge \\neg a$"
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 19,
-        question: "Nếu a là một tư tưởng thì mệnh đề “Một tư tưởng chỉ có một giá trị logic xác định hoặc là đúng hoặc là sai chứ không có khả năng thứ ba” được ký hiệu như thế nào?",
-        options: [
-            "$\\neg(a \\wedge \\neg a)$",
-            "$\\neg(a \\vee \\neg a)$",
-            "$a \\vee \\neg a$",
-            "$a \\wedge \\neg a$"
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 20,
-        question: "Quy luật phi mâu thuẫn còn được phát biểu như thế nào trong lịch sử logic học?",
-        options: [
-            "Một sự vật là chính nó.",
-            "Một sự vật không thể vừa là nó vừa không phải là nó.",
-            "Một sự vật có thể thế này nhưng cũng có thể thế khác.",
-            "Một sự vật hoặc có hoặc không có, chứ không thể có trường hợp thứ ba."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 21,
-        question: "Quy luật loại trừ cái thứ ba còn được phát biểu như thế nào trong lịch sử logic học?",
-        options: [
-            "Một sự vật là chính nó.",
-            "Một sự vật không thể vừa là nó vừa không phải là nó.",
-            "Một sự vật có thể thế này nhưng cũng có thể thế khác.",
-            "Một sự vật hoặc có hoặc không có, chứ không thể có trường hợp thứ ba."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 22,
-        question: "Quy luật phi mâu thuẫn là cơ sở của thao tác logic nào?",
-        options: [
-            "Phép bác bỏ gián tiếp.",
-            "Phép bác bỏ trực tiếp.",
-            "Phép chứng minh phản chứng.",
-            "Phép chứng minh loại trừ."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 23,
-        question: "Tư tưởng “Có thương thì nói là thương. Không thương thì nói một đường cho xong” bị chi phối bởi quy luật gì?",
-        options: [
-            "QL phi mâu thuẫn.",
-            "QL loại trừ cái thứ ba.",
-            "QL đồng nhất.",
-            "QL lý do đầy đủ."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 24,
-        question: "Những quy luật nào làm cho tư duy mang tính hình thức?",
-        options: [
-            "QL đồng nhất.",
-            "QL phi mâu thuẫn và QL loại trừ cái thứ ba.",
-            "QL đồng nhất, QL phi mâu thuẫn và QL loại trừ cái thứ ba.",
-            "QL lý do đầy đủ, QL đồng nhất, QL phi mâu thuẫn và QL loại trừ cái thứ ba."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 25,
-        question: "Quy luật đồng nhất đảm bảo cho tư duy có được tính chất gì?",
-        options: [
-            "Tính không bị xuyên tạc hay đánh tráo mệnh đề.",
-            "Không sa vào mâu thuẫn.",
-            "Sử dụng ngôn ngữ đầy hình tượng và chính xác.",
-            "Tính xác định chính xác, rõ ràng rành mạch."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 26,
-        question: "Quy luật đồng nhất là quy luật cơ bản của môn học nào?",
-        options: [
-            "Siêu hình học và khoa học lý thuyết.",
-            "logic học biện chứng và logic học hình thức.",
-            "logic học hình thức.",
-            "Nhận thức luận và siêu hình học."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 27,
-        question: "Trong logic học, thuật ngữ “đồng nhất trừu tượng” được hiểu như thế nào?",
-        options: [
-            "Sự bất biến của sự vật trong hiện thực.",
-            "Sự giống nhau hoàn toàn của tư tưởng về đối tượng với đối tượng tư tưởng.",
-            "Đồng nhất các phẩm chất xác định của đối tượng tư tưởng được phản ánh trong tư duy với bản thân đối tượng tư tưởng trong hiện thực.",
-            "A), B), C) đều đúng."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 28,
-        question: "“Không được thay đổi đối tượng tư tưởng; tư tưởng lặp lại phải giống tư tưởng ban đầu; ngôn ngữ diễn đạt tư tưởng phải chính xác” là yêu cầu của quy luật nào?",
-        options: [
-            "QL lý do đầy đủ.",
-            "QL đồng nhất.",
-            "QL phi mâu thuẫn.",
-            "QL loại trừ cái thứ ba."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 29,
-        question: "Cặp phán đoán \"Người VN yêu nước\" và “Vài người VN không yêu nước” bị chi phối trực tiếp bởi quy luật nào?",
-        options: [
-            "QL phi mâu thuẫn.",
-            "QL loại trừ cái thứ ba.",
-            "QL loại trừ cái thứ ba và QL đồng nhất.",
-            "QL loại trừ cái thứ ba, QL đồng nhất và QL phi mâu thuẫn."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 30,
-        question: "Cặp phán đoán “Người VN yêu nước” và “Người VN không yêu nước” bị chi phối trực tiếp bởi quy luật nào?",
-        options: [
-            "QL phi mâu thuẫn.",
-            "QL loại trừ cái thứ ba.",
-            "QL loại trừ cái thứ ba và QL lý do đầy đủ.",
-            "QL loại trừ cái thứ ba và QL phi mâu thuẫn."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 31,
-        question: "Cơ sở của phép chứng minh phản chứng là quy luật nào?",
-        options: [
-            "QL phi mâu thuẫn.",
-            "QL loại trừ cái thứ ba và QL đồng nhất.",
-            "QL loại trừ cái thứ ba và QL lý do đầy đủ.",
-            "QL loại trừ cái thứ ba và QL phi mâu thuẫn."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 32,
-        question: "Quy luật loại trừ cái thứ ba và quy luật phi mâu thuẫn đảm bảo cho tư duy có được tính chất gì?",
-        options: [
-            "Tính xác định chính xác, rõ ràng rành mạch.",
-            "Tính có căn cứ, được luận chứng, xác minh, chứng minh.",
-            "Tính phi mâu thuẫn; tính có căn cứ, được luận chứng, xác minh, chứng minh.",
-            "Tính phi mâu thuẫn, liên tục, nhất quán."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 33,
-        question: "Quy luật lý do đầy đủ đảm bảo cho tư duy có được tính chất gì?",
-        options: [
-            "Tính xác định chính xác, tính rõ ràng rành mạch.",
-            "Tính có căn cứ, được luận chứng, xác minh.",
-            "Tính phi mâu thuẫn; tính có căn cứ, được luận chứng, xác minh.",
-            "Tính phi mâu thuẫn, liên tục, nhất quán; tính chính xác, rõ ràng."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 34,
-        question: "Mâu thuẫn (MT) nào xuất hiện một cách chủ quan, thể hiện dưới dạng cặp phán đoán trái ngược nhau và làm bế tắc tiến trình tư duy?",
-        options: [
-            "MT biện chứng.",
-            "MT của nhận thức.",
-            "MT của tư duy.",
-            "MT logic."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 35,
-        question: "Mâu thuẫn (MT) nào xuất hiện một cách khách quan, dưới dạng thống nhất và đấu tranh của các mặt đối lập, có vai trò là nguồn gốc, động lực của mọi sự vận động, phát triển diễn ra trong thế giới?",
-        options: [
-            "MT xã hội.",
-            "MT tư duy.",
-            "MT tự nhiên.",
-            "Cả A), B) và C)."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 36,
-        question: "Sử dụng từ ngữ một cách mập mờ, để sau đó có thể giải thích cùng một từ theo các cách khác nhau là vi phạm yêu cầu của quy luật (QL) nào?",
-        options: [
-            "QL đồng nhất.",
-            "QL lý do đầy đủ.",
-            "QL không mâu thuẫn.",
-            "Không hề vi phạm các QL cơ bản của tư duy, tuy nhiên vi phạm quy tắc định nghĩa khái niệm."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 37,
-        question: "Hình thức tư duy phản ánh những dấu hiệu bản chất của đối tượng tư tưởng được gọi là gì?",
-        options: [
-            "Ý niệm.",
-            "Khái niệm.",
-            "Suy tưởng.",
-            "Phán đoán."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 38,
-        question: "logic học gọi toàn thể các dấu hiệu bản chất của đối tượng tư tưởng là gì?",
-        options: [
-            "Ngoại diên khái niệm.",
-            "Nội hàm khái niệm.",
-            "Bản chất của khái niệm.",
-            "Khái niệm."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 39,
-        question: "logic học gọi toàn thể các phần tử có cùng dấu hiệu bản chất hợp thành đối tượng tư tưởng là gì?",
-        options: [
-            "Khái niệm.",
-            "Nội hàm khái niệm.",
-            "Ngoại diên khái niệm.",
-            "A), B) và C) đều sai."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 40,
-        question: "Khái niệm bao gồm những bộ phận nào?",
-        options: [
-            "Từ và ý.",
-            "Âm (ký hiệu) và nghĩa.",
-            "Nội hàm và ngoại diên.",
-            "Tất cả các yếu tố của A), B) và C)."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 41,
-        question: "Nội hàm (NH) và ngoại diên (ND) của khái niệm có quan hệ gì?",
-        options: [
-            "NH càng sâu thì ND càng rộng, NH càng cạn thì ND càng hẹp.",
-            "NH càng cạn thì ND càng rộng, NH càng sâu thì ND càng hẹp.",
-            "NH càng rộng thì ND càng sâu, NH càng hẹp thì ND càng sâu.",
-            "NH càng hẹp thì ND càng cạn, NH càng rộng thì ND càng sâu."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 42,
-        question: "Cách phân chia khái niệm (KN) nào sau đây đúng?",
-        options: [
-            "KN thực và KN ảo.",
-            "KN chung và KN riêng.",
-            "KN riêng, KN vô hạn và KN hữu hạn.",
-            "A), B), C) đều đúng."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 43,
-        question: "Khái niệm thực phản ánh điều gì?",
-        options: [
-            "Dấu hiệu bản chất của đối tượng tư tưởng (ĐTTT).",
-            "Dấu hiệu chung của một lớp ĐTTT.",
-            "Dấu hiệu bản chất của một lớp ĐTTT.",
-            "A), B), C) đều đúng."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 44,
-        question: "Xét trong khái niệm “Con người”, thì “Đàn ông” và “Đàn bà” là 2 khái niệm có quan hệ gì?",
-        options: [
-            "QH mâu thuẫn.",
-            "QH đối chọi.",
-            "QH giao nhau.",
-            "QH đồng nhất."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 45,
-        question: "“Con người” và \"Sinh thể\" là 2 khái niệm có quan hệ gì?",
-        options: [
-            "QH giao nhau.",
-            "QH mâu thuẫn.",
-            "QH đồng nhất.",
-            "QH lệ thuộc."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 46,
-        question: "Xác định quan hệ (QH) giữa 2 khái niệm, trong đó, nội hàm của chúng có dấu hiệu trái ngược nhau, còn ngoại diên của chúng chỉ là hai bộ phận khác nhau của ngoại diên một khái niệm thứ ba nào đó?",
-        options: [
-            "QH mâu thuẫn.",
-            "QH đồng nhất.",
-            "QH đối chọi.",
-            "QH lệ thuộc."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 47,
-        question: "Cặp khái niệm nào có quan hệ mâu thuẫn nhau?",
-        options: [
-            "Đen - Trắng.",
-            "Đàn ông - Đàn bà.",
-            "Đỏ - Không đỏ.",
-            "A), B) và C) đều đúng."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 48,
-        question: "Bổ sung để có một định nghĩa đúng: “Mở rộng khái niệm (KN) là thao tác logic...\"",
-        options: [
-            "đi từ KN hạng sang KN loại.",
-            "đi từ KN riêng sang KN chung.",
-            "đi từ KN có nội hàm (NH) sâu, ngoại diên (ND) hẹp sang KN có NH cạn, ND rộng.",
-            "đi từ KN có NH cạn, ND rộng sang KN có NH sâu, ND hẹp."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 49,
-        question: "Bổ sung để có một định nghĩa đúng: “Thu hẹp khái niệm (KN) là thao tác logic...”.",
-        options: [
-            "Đi từ KN loại sang KN hạng.",
-            "Đi từ KN chung sang KN riêng.",
-            "Đi từ KN có nội hàm (NH) sâu, ngoại diên (ND) hẹp sang KN có NH cạn, ND rộng.",
-            "Đi từ KN có NH cạn ND rộng sang KN có NH sâu ND hẹp."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 50,
-        question: "Mở rộng khái niệm (KN) có giới hạn cuối cùng là gì?",
-        options: [
-            "KN đơn nhất.",
-            "Phạm trù.",
-            "KN vô hạn.",
-            "KN chung."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 51,
-        question: "Thu hẹp khái niệm (KN) có giới hạn cuối cùng là gì?",
-        options: [
-            "KN ảo.",
-            "Phạm trù.",
-            "KN cụ thể.",
-            "KN đơn nhất."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 52,
-        question: "Thao tác logic làm rõ nội hàm của khái niệm (KN) được gọi là gì?",
-        options: [
-            "Mở rộng và thu hẹp KN.",
-            "Phân chia KN.",
-            "Định nghĩa KN.",
-            "Phân chia và định nghĩa KN."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 53,
-        question: "Muốn định nghĩa khái niệm (KN) đúng, thì KN định nghĩa và KN dùng để định nghĩa phải có quan hệ gì?",
-        options: [
-            "QH giao nhau.",
-            "QH lệ thuộc.",
-            "QH đồng nhất.",
-            "QH đồng nhất và lệ thuộc."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 54,
-        question: "Định nghĩa khái niệm đúng khi nào?",
-        options: [
-            "Cân đối, rõ ràng, liên tục, nhất quán.",
-            "Cân đối, chính xác, rõ ràng.",
-            "Không thừa, không thiếu, không luẩn quẩn, liên tục, nhất quán.",
-            "Không thừa, không thiếu, không luẩn quẩn, rõ ràng, nhất quán."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 55,
-        question: "Định nghĩa khái niệm cân đối khi nào?",
-        options: [
-            "Không luẩn quẩn, không mơ hồ, không phủ định.",
-            "Không rộng, không hẹp, không mơ hồ.",
-            "Không rộng, không hẹp.",
-            "A), B), C) đều đúng."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 56,
-        question: "Định nghĩa khái niệm rõ ràng khi nào?",
-        options: [
-            "Không luẩn quẩn, không phủ định, không mơ hồ.",
-            "Không rộng, không hẹp, không mơ hồ.",
-            "Không rộng, không hẹp.",
-            "A), B), C) đều đúng."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 57,
-        question: "Có thể định nghĩa \"Con người là thước đo của vạn vật\" được không?",
-        options: [
-            "Được, vì đề cao con người.",
-            "Không được, vì ý tưởng hay nhưng không chuẩn xác.",
-            "Không, vì không xác định rõ nội hàm khái niệm \"con người\".",
-            "Không, vì không thể coi con người là thước đo của vạn vật được."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 58,
-        question: "Phân chia khái niệm (KN) là thao tác gì?",
-        options: [
-            "Liệt kê các KN lệ thuộc trong KN được lệ thuộc.",
-            "Vạch ra các KN cấp hạng trong KN cấp loại được phân chia.",
-            "Làm rõ ngoại diên KN được phân chia.",
-            "Làm rõ nội hàm KN được phân chia."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 59,
-        question: "Phân chia khái niệm cân đối khi nào?",
-        options: [
-            "Nhất quán, không vượt cấp.",
-            "Không vượt cấp, các khái niệm thành phần loại trừ nhau.",
-            "Không thừa, không thiếu.",
-            "Không thừa, không thiếu, không vượt cấp, các khái niệm thành phần loại trừ nhau."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 60,
-        question: "Phân chia khái niệm đúng khi nào?",
-        options: [
-            "Cân đối và nhất quán.",
-            "Cân đối, ngắn gọn, rõ ràng.",
-            "Không thừa, không thiếu, nhất quán, liên tục.",
-            "Cân đối, nhất quán, các thành phần phân chia loại trừ nhau và liên tục."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 61,
-        question: "Bổ sung để được một định nghĩa đúng: “Phân đôi khái niệm (KN) là phân chia KN ra thành 2 KN có quan hệ... nhau”.",
-        options: [
-            "tương phản",
-            "tương đương",
-            "mâu thuẫn",
-            "Cả A) và C)."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 62,
-        question: "Chia “Thành phố” ra thành “Quận/Huyện”, “Phường/Xã”, ... là thao tác gì?",
-        options: [
-            "Phân đôi.",
-            "Phân loại.",
-            "Phân tích.",
-            "A), B), C) đều sai."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 63,
-        question: "Phân chia khái niệm (KN) theo sự biến đổi dấu hiệu là gì?",
-        options: [
-            "Thao tác vạch ra ngoại diên của KN được phân chia.",
-            "Thao tác chia KN cấp loại ra thành các KN cấp hạng của nó.",
-            "Thao tác chia chỉnh thể ra thành các bộ phận của nó.",
-            "A), B) và C) đều đúng."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 64,
-        question: "“X là một số nguyên tố” là gì?",
-        options: [
-            "Một mệnh đề.",
-            "Một câu.",
-            "Một phán đoán.",
-            "A), B), C) đều đúng."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 65,
-        question: "“Có lẽ hôm nay sinh viên lớp ta đang thi môn logic học” là phán đoán gì?",
-        options: [
-            "PĐ đặc tính.",
-            "PĐ thời gian.",
-            "PĐ tình thái.",
-            "Cả A), B) và C)."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 66,
-        question: "“Hầu hết sinh viên lớp ta đều dự thi môn logic học” là phán đoán gì?",
-        options: [
-            "PĐ bộ phận.",
-            "PĐ toàn thể.",
-            "PĐ toàn thể - khẳng định.",
-            "PĐ tình thái - khẳng định."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 67,
-        question: "Hãy xác định chủ từ (S) và vị từ (P) của phán đoán: “Tôi biết rằng anh ta rất tốt”.",
-        options: [
-            "S = Tôi; P = biết rằng anh ta rất tốt.",
-            "S = Tôi; P = anh ta rất tốt.",
-            "S = Tôi biết rằng; P = anh ta tốt.",
-            "S = Tôi; P = anh ta"
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 68,
-        question: "“Đôi khi chuồn chuồn bay thấp mà trời không mưa” là phán đoán dạng nào?",
-        options: [
-            "A",
-            "I",
-            "E",
-            "O"
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 69,
-        question: "“Hầu hết người Việt Nam đều là người yêu nước” và “Không có chuyện mọi người Việt Nam đều là người yêu nước” là hai phán đoán có quan hệ gì?",
-        options: [
-            "QH mâu thuẫn.",
-            "QH lệ thuộc.",
-            "QH tương phản trên.",
-            "QH tương phản dưới."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 70,
-        question: "Hãy xác định tính chu diên của chủ từ (S) và vị từ (P) trong phán đoán “Sinh viên lớp ta học giỏi môn logic học”.",
-        options: [
-            "$S^+$; $P^-$",
-            "$S^+$ (chu diên); $P^+$ (chu diên)",
-            "$S^-$ (không chu diên); $P^-$",
-            "$S^-$; $P^+$"
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 71,
-        question: "Hãy xác định tính chu diên của chủ từ (S) và vị từ (P) trong phán đoán \"Người cộng sản không là kẻ bóc lột\".",
-        options: [
-            "$S^+$; $P^+$",
-            "$S^+$; $P^-$",
-            "$S^-$; $P^-$",
-            "$S^-$; $P^+$"
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 72,
-        question: "Hãy xác định tính chu diên của chủ từ (S) và vị từ (P) trong phán đoán “Hầu hết người Việt Nam đều là người yêu nước”.",
-        options: [
-            "$S^+$; $P^-$",
-            "$S^+$; $P^+$",
-            "$S^-$; $P^+$",
-            "$S^-$; $P^-$"
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 73,
-        question: "Hãy xác định tính chu diên của chủ từ (S) và vị từ (P) trong phán đoán \"Tam giác là hình có 3 cạnh\".",
-        options: [
-            "$S^+$; $P^+$",
-            "$S^+$; $P^-$",
-            "$S^-$; $P^-$",
-            "$S^-$; $P^+$"
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 74,
-        question: "Hãy xác định tính chu diên của chủ từ (S) và vị từ (P) trong phán đoán “Vài người tốt nghiệp trung học là sinh viên”.",
-        options: [
-            "$S^+$; $P^+$",
-            "$S^+$; $P^-$",
-            "$S^-$; $P^-$",
-            "$S^-$; $P^+$"
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 75,
-        question: "Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ lệ thuộc?",
-        options: [
-            "$A \\to I; I \\to A$",
-            "$A \\to I; E \\to O$",
-            "$E \\to O$",
-            "$-A; E \\to O$"
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 76,
-        question: "Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ lệ thuộc?",
-        options: [
-            "$A \\to I; I \\to A$",
-            "$A \\to I; \\sim A \\to \\sim I$",
-            "$E \\to O; A \\to I$",
-            "$A; E \\to O$"
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 77,
-        question: "Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ mâu thuẫn?",
-        options: [
-            "$A \\leftrightarrow O; I \\leftrightarrow E$",
-            "$A \\leftrightarrow \\sim O; \\sim A \\leftrightarrow O$",
-            "$A \\leftrightarrow E; E \\leftrightarrow A$",
-            "$I \\leftrightarrow E$"
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 78,
-        question: "Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ tương phản trên (đối chọi)?",
-        options: [
-            "$\\sim A \\to E; \\sim E \\to A$",
-            "$A \\to \\sim E; E \\to \\sim A$",
-            "$A \\to \\sim E; \\sim E \\to A$",
-            "$\\sim A \\to E; \\sim E \\to A$"
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 79,
-        question: "Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ tương phản dưới?",
-        options: [
-            "$\\sim O \\to I; \\sim I \\to \\sim O$",
-            "$I \\to \\sim O; O \\to \\sim I$",
-            "$\\sim I \\to O; \\sim O \\to I$",
-            "$\\sim I \\to O; O \\to I$"
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 80,
-        question: "Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ mâu thuẫn?",
-        options: [
-            "$A \\leftrightarrow O; I \\leftrightarrow E$",
-            "$A \\leftrightarrow \\sim O; O \\leftrightarrow \\sim A$",
-            "$A \\to \\sim E; O \\leftrightarrow \\sim A$",
-            "$\\sim I \\leftrightarrow E; \\sim O \\leftrightarrow A$"
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 81,
-        question: "Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ tương phản trên?",
-        options: [
-            "$A \\to E; \\sim E \\to A$",
-            "$A \\to \\sim E; E \\to \\sim A$",
-            "$A \\to E; \\sim E \\to A$",
-            "$\\sim A \\to E; \\sim E \\to A$"
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 82,
-        question: "Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ tương phản dưới?",
-        options: [
-            "$\\sim I \\to O; \\sim O \\to I$",
-            "$I \\leftrightarrow \\sim O; O \\leftrightarrow \\sim I$",
-            "$I \\to O; \\sim I \\to \\sim O$",
-            "$\\sim I \\to O; O \\to I$"
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 83,
-        question: "Xét về cấu trúc của khái niệm, mệnh đề nào sau đây sai?",
-        options: [
-            "Đồng nhất về nội hàm thì cũng đồng nhất về ngoại diên.",
-            "Đồng nhất về ngoại diên thì cũng đồng nhất về nội hàm.",
-            "Một khái niệm có thể có nhiều nội hàm khác nhau.",
-            "Khái niệm bao gồm nội hàm và ngoại diên, còn từ bao gồm ký (tín) hiệu và nghĩa."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 84,
-        question: "Mệnh đề nào sau đây đúng?",
-        options: [
-            "Điều kiện cần và đủ để PĐLK sai là các PĐTP cùng sai.",
-            "Muốn PĐLK đúng chỉ cần một PĐTP đúng là đủ.",
-            "PĐLK sai khi và chỉ khi các PĐTP cùng sai.",
-            "Phán đoán liên kết (PĐLK) đúng khi các phán đoán thành phần (PĐTP) đều cùng đúng."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 85,
-        question: "Mệnh đề nào sau đây đúng?",
-        options: [
-            "Điều kiện cần và đủ để PĐLCLH (tuyển yếu) sai là các PĐTP cùng sai.",
-            "PĐLCLH đúng khi và chỉ khi có một PĐTP đúng.",
-            "PĐLCLH sai khi và chỉ khi các PĐTP cùng đúng.",
-            "Phán đoán lựa chọn liên hợp (PĐLCLH) đúng khi các phán đoán thành phần (PĐTP) cùng đúng."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 86,
-        question: "Mệnh đề nào sau đây đúng?",
-        options: [
-            "Điều kiện cần và đủ để PĐLCGB (tuyển mạnh) sai là các PĐTP cùng sai.",
-            "PĐLCGB đúng khi và chỉ khi có một PĐTP đúng (và cái kia sai).",
-            "PĐLCGB sai khi và chỉ khi các PĐTP cùng sai.",
-            "Phán đoán lựa chọn gạt bỏ (PĐLCGB) đúng khi các phán đoán thành phần (PĐTP) cùng đúng."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 87,
-        question: "Mệnh đề nào sau đây đúng?",
-        options: [
-            "Phán đoán kéo theo (PĐKT) sai khi và chỉ khi hậu từ sai.",
-            "PĐKT sai khi tiền từ đúng và hậu từ sai.",
-            "Muốn PĐKT đúng thì tiền từ phải đúng và hậu từ phải sai.",
-            "PĐKT đúng khi và chỉ khi tiền từ và hậu từ có cùng giá trị logic."
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 88,
-        question: "“Lý luận và thực hành phải đi đôi với nhau” là phán đoán gì?",
-        options: [
-            "PĐ liên kết.",
-            "PĐ lựa chọn.",
-            "PĐ kéo theo.",
-            "A), B) và C) đều sai."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 89,
-        question: "“Hai đường thẳng đồng phẳng song song với nhau thì chúng không cắt nhau” là phán đoán gì?",
-        options: [
-            "PĐ liên kết.",
-            "PĐ kéo theo.",
-            "PĐ kéo theo kép (tương đương).",
-            "PĐ lựa chọn gạt bỏ."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 90,
-        question: "Nếu phán đoán $P \\to Q$ đúng thì mệnh đề nào sau đây cũng đúng?",
-        options: [
-            "P là điều kiện cần của Q.",
-            "Q là điều kiện đủ của P.",
-            "P là điều kiện cần và đủ của Q.",
-            "P là điều kiện đủ của Q."
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 91,
-        question: "Nếu phán đoán $\\neg P \\to \\neg Q$ đúng thì mệnh đề nào sau đây cũng đúng?",
-        options: [
-            "Q là điều kiện cần của P (vì tương đương Q -> P).",
-            "Q là điều kiện cần của P.",
-            "P là điều kiện cần và đủ của Q.",
-            "P là điều kiện đủ của Q."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 92,
-        question: "Nếu phán đoán $P \\leftrightarrow Q$ đúng thì mệnh đề nào sau đây cũng đúng?",
-        options: [
-            "P, Q là điều kiện cần và đủ của nhau.",
-            "P là điều kiện đủ của Q.",
-            "P là điều kiện cần của Q.",
-            "Q là điều kiện cần của P."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 93,
-        question: "Tìm phán đoán tương đương logic với: $\\neg a \\to b$",
-        options: [
-            "$\\neg b \\to \\neg a$",
-            "$a \\to b$",
-            "$\\neg a \\to \\neg b$",
-            "$\\neg b \\to a$"
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 94,
-        question: "Tìm phán đoán tương đương logic với: $a \\to \\neg b$",
-        options: [
-            "$\\neg(a \\wedge b)$",
-            "$\\neg a \\wedge \\neg b$",
-            "$\\neg(\\neg a \\wedge \\neg b)$",
-            "$a \\vee b$"
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 95,
-        question: "Tìm phán đoán nào tương đương logic với: $\\neg a \\to b$.",
-        options: [
-            "$\\neg a \\vee b$",
-            "$\\neg(a \\wedge b)$",
-            "$a \\wedge b$",
-            "$a \\vee b$"
-        ],
-        correctAnswer: 3
-    },
-    {
-        id: 96,
-        question: "Loại suy luận hợp logic nào đảm bảo chắc chắn kết luận xác thực nếu có các tiền đề xác thực?",
-        options: [
-            "Suy luận diễn dịch.",
-            "Suy luận quy nạp.",
-            "Suy luận tương tự.",
-            "Cả A), B) và C)."
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 97,
-        question: "Từ phán đoán “Một số sinh viên học giỏi logic học”, bằng phép đổi chất kết luận được rút ra là gì?",
-        options: [
-            "Số sinh viên còn lại học không giỏi logic học.",
-            "Một số người học giỏi logic học là sinh viên.",
-            "Một số sinh viên không phải là người không học giỏi logic học.",
-            "Không thực hiện phép đổi chất được."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 98,
-        question: "Thao tác logic đi từ một hay vài tiền đề có quan hệ logic với nhau để rút ra một kết luận được gọi là gì?",
-        options: [
-            "Diễn dịch trực tiếp.",
-            "Quy nạp hoàn toàn.",
-            "Suy luận.",
-            "Phán đoán."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 99,
-        question: "Trong các loại suy luận sau, loại suy luận nào không phải là suy luận diễn dịch?",
-        options: [
-            "Suy luận từ quy tắc và trường hợp cụ thể đến kết luận cụ thể.",
-            "Suy luận từ quy tắc chung và trường hợp cụ thể đến kết luận cụ thể.",
-            "Suy luận từ quy tắc chung và trường hợp cụ thể đến kết luận quy tắc chung.",
-            "Suy luận từ quy tắc chung và trường hợp cụ thể đến kết luận quy tắc cụ thể."
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 100,
-        question: "Loại suy luận nào sau đây là suy luận quy nạp?",
-        options: [
-            "Tất cả các sinh viên lớp ta đều học giỏi logic học. Nam là sinh viên lớp ta. Vậy Nam học giỏi logic học.",
-            "Học sinh trường A đều thi đỗ tốt nghiệp. Học sinh trường B đều thi đỗ tốt nghiệp. Vậy tất cả học sinh các trường đều thi đỗ tốt nghiệp.",
-            "Mọi người cộng sản đều là người yêu nước. Anh là người cộng sản. Vậy anh là người yêu nước.",
-            "Tất cả các số nguyên tố đều lớn hơn 1. Số 5 là số nguyên tố. Vậy số 5 lớn hơn 1."
-        ],
-        correctAnswer: 1
-    }
-    
-    
+// --- HÀM XỬ LÝ TEXT (Đã sửa để không chèn tag Latex bậy) ---
+function formatLogicText(text) {
+    if (!text) return "";
+    // Chỉ loại bỏ khoảng trắng thừa, giữ nguyên text gốc
+    // MathJax sẽ tự động render phần nào nằm trong $...$
+    return text.replace(/\s+/g, ' ').trim();
+}
+
+// --- DỮ LIỆU CÂU HỎI ---
+
+const part1 = [
+    {id:1,question:"Đối tượng của logic học là gì?",options:["Nhận thức.","Tính chân lý của tư tưởng.","Tư duy.","Kết cấu và quy luật của tư duy."],correctAnswer:3},
+    {id:2,question:"Tư duy có những đặc tính nào?",options:["Cụ thể, sinh động, trừu tượng, khái quát.","Gián tiếp, năng động - sáng tạo, sinh động và sâu sắc.","Trực tiếp, liên hệ với ngôn ngữ, trừu tượng, khái quát, sâu sắc.","Gián tiếp, năng động - sáng tạo, trừu tượng, khái quát, sâu sắc."],correctAnswer:3},
+    {id:3,question:"Mệnh đề nào sau đây đúng?",options:["Tư duy càng trừu tượng thì càng khái quát.","Tư duy càng trừu tượng thì càng chính xác.","Tư duy càng khái quát thì càng gián tiếp và đúng đắn.","Tư duy càng khái quát thì càng gián tiếp, càng trừu tượng, càng đúng đắn, càng năng động - sáng tạo."],correctAnswer:0},
+    {id:4,question:"Hình thức tư duy, kết cấu logic của tư tưởng là gì?",options:["Những cái tiên nghiệm.","Hai cái hoàn toàn khác nhau.","Một bộ phận của nội dung tư tưởng.","Những sơ đồ, công thức, ký hiệu do con người đặt ra để dễ dàng diễn đạt nội dung tư tưởng."],correctAnswer:2},
+    {id:5,question:"Bổ sung để có một câu đúng của V.I.Lênin: “Những hình thức logic và những quy luật logic không phải là cái vỏ trống rỗng mà là... của thế giới khách quan”.",options:["sản phẩm.","công cụ nhận thức.","phản ánh.","nguồn gốc."],correctAnswer:2},
+    {id:6,question:"Quy luật tư duy (quy luật logic của tư tưởng) là gì?",options:["Mối liên hệ bản chất, tất yếu, khách quan giữa các tư tưởng.","Cái chi phối các kết cấu của tư tưởng để đảm bảo cho tư tưởng phản ánh đúng đối tượng được tư tưởng.","Các yêu cầu đối với tư duy để tư duy phù hợp với hiện thực.","Tất cả phương án trên"],correctAnswer:3},
+    {id:7,question:"Từ “logic” trong tiếng Việt có nghĩa là gì?",options:["Mối liên hệ mang tính tất yếu giữa các sự vật, hiện tượng trong hiện thực khách quan.","Mối liên hệ mang tính tất yếu giữa những ý nghĩ, tư tưởng trong hiện thực chủ quan.","logic học.","Tất cả phương án trên"],correctAnswer:3},
+    {id:8,question:"logic học là gì?",options:["Khoa học về tư duy.","Môn học nghiên cứu các hình thức và quy luật của tư duy.","Môn học nhằm làm trong sáng đầu óc.","Khoa học vạch ra sự phù hợp của tư tưởng với tư tưởng."],correctAnswer:1},
+    {id:9,question:"Bổ sung từ còn thiếu để có một câu đúng: “Vấn đề về tính chân lý của tư duy là vấn đề ...”.",options:["cơ bản của logic học.","nói về sự phù hợp của tư tưởng với thực tại.","nói về sự phù hợp của tư tưởng với tư tưởng.","cơ bản của mọi hoạt động nhận thức của con người."],correctAnswer:0},
+    {id:10,question:"Nhiệm vụ của logic học là gì?",options:["Vạch ra các hình thức và quy luật của tư duy logic.","Vạch ra các hình thức và quy luật của tư duy biện chứng.","Vạch ra tính chân lý của tư tưởng.","Vạch ra các kết cấu của tư tưởng, các sơ đồ của lập luận, các quy tắc, phương pháp chi phối chúng."],correctAnswer:3},
+    {id:11,question:"Bổ sung từ còn thiếu để có một câu đúng: “logic học (LG) được chia thành...”",options:["LG biện chứng, LG hình thức và LG toán.","LG lưỡng trị, LG đa trị và LG mở.","LG cổ điển và LG phi cổ điển.","Tất cả phương án trên"],correctAnswer:3},
+    {id:12,question:"Khi khảo sát một tư tưởng, logic hình thức chủ yếu làm gì?",options:["Chỉ để ý đến hình thức của tư tưởng.","Chỉ để ý đến nội dung của tư tưởng.","Vừa để ý đến nội dung, vừa để ý đến hình thức của tư tưởng.","Tuỳ từng trường hợp mà để ý đến nội dung, hình thức hay để ý đến cả hai."],correctAnswer:0},
+    {id:13,question:"Quy luật đồng nhất phản ánh điều gì trong hiện thực?",options:["Sự đứng im tương đối, sự ổn định về chất của đối tượng được tư tưởng.","Sự đồng nhất tư tưởng với đối tượng được tư tưởng.","Tính bất biến của đối tượng được tư tưởng.","Cả A), B) và C)."],correctAnswer:0},
+    {id:14,question:"Quy luật lý do đầy đủ phản ánh điều gì trong hiện thực?",options:["Tính chứng minh được của tư tưởng.","Mối liên hệ phổ biến của sự vật, hiện tượng.","Mối liên hệ nhân quả chi phối giữa các đối tượng được tư tưởng.","Cơ sở dẫn tới sự đứng im tương đối, sự ổn định về chất của đối tượng được tư tưởng."],correctAnswer:3},
+    {id:15,question:"“Hai tư tưởng trái ngược nhau không cùng đúng” là phát biểu của quy luật (QL) nào?",options:["QL Loại trừ cái thứ ba.","QL Phi mâu thuẫn.","QL Đồng nhất.","QL Lý do đầy đủ."],correctAnswer:1},
+    {id:16,question:"Mệnh đề “Hai tư tưởng (TT) không cùng đúng” tương đương logic với mệnh đề nào?",options:["Hai TT không thể cùng sai.","Hai TT, trong đó, nếu TT này đúng thì TT còn lại sai.","Hai TT, trong đó, nếu TT này sai thì TT còn lại đúng.","Hai TT, trong đó, nếu TT này đúng thì TT kia sai, và nếu TT này sai thì TT kia đúng."],correctAnswer:1},
+    {id:17,question:"“Hai tư tưởng mâu thuẫn nhau không thể đồng thời cùng đúng, cùng sai” là phát biểu của quy luật nào?",options:["QL Phi mâu thuẫn.","QL Loại trừ cái thứ ba.","QL Đồng nhất.","QL Lý do đầy đủ."],correctAnswer:1},
+    {id:18,question:"Nếu a là một tư tưởng thì mệnh đề “Một tư tưởng không thể đồng thời có hai giá trị logic trái ngược nhau” được kí hiệu như thế nào?",options:["$\\neg(a \\wedge \\neg a)$","$\\neg(a \\vee \\neg a)$","$a \\vee \\neg a$","$a \\wedge \\neg a$"],correctAnswer:0},
+    {id:19,question:"Nếu a là một tư tưởng thì mệnh đề “Một tư tưởng chỉ có một giá trị logic xác định hoặc là đúng hoặc là sai chứ không có khả năng thứ ba” được ký hiệu như thế nào?",options:["$\\neg(a \\wedge \\neg a)$","$\\neg(a \\vee \\neg a)$","$a \\vee \\neg a$","$a \\wedge \\neg a$"],correctAnswer:2},
+    {id:20,question:"Quy luật phi mâu thuẫn còn được phát biểu như thế nào trong lịch sử logic học?",options:["Một sự vật là chính nó.","Một sự vật không thể vừa là nó vừa không phải là nó.","Một sự vật có thể thế này nhưng cũng có thể thế khác.","Một sự vật hoặc có hoặc không có, chứ không thể có trường hợp thứ ba."],correctAnswer:1},
+    {id:21,question:"Quy luật loại trừ cái thứ ba còn được phát biểu như thế nào trong lịch sử logic học?",options:["Một sự vật là chính nó.","Một sự vật không thể vừa là nó vừa không phải là nó.","Một sự vật có thể thế này nhưng cũng có thể thế khác.","Một sự vật hoặc có hoặc không có, chứ không thể có trường hợp thứ ba."],correctAnswer:3},
+    {id:22,question:"Quy luật phi mâu thuẫn là cơ sở của thao tác logic nào?",options:["Phép bác bỏ gián tiếp.","Phép bác bỏ trực tiếp.","Phép chứng minh phản chứng.","Phép chứng minh loại trừ."],correctAnswer:0},
+    {id:23,question:"Tư tưởng “Có thương thì nói là thương. Không thương thì nói một đường cho xong” bị chi phối bởi quy luật gì?",options:["QL phi mâu thuẫn.","QL loại trừ cái thứ ba.","QL đồng nhất.","QL lý do đầy đủ."],correctAnswer:1},
+    {id:24,question:"Những quy luật nào làm cho tư duy mang tính hình thức?",options:["QL đồng nhất.","QL phi mâu thuẫn và QL loại trừ cái thứ ba.","QL đồng nhất, QL phi mâu thuẫn và QL loại trừ cái thứ ba.","QL lý do đầy đủ, QL đồng nhất, QL phi mâu thuẫn và QL loại trừ cái thứ ba."],correctAnswer:2},
+    {id:25,question:"Quy luật đồng nhất đảm bảo cho tư duy có được tính chất gì?",options:["Tính không bị xuyên tạc hay đánh tráo mệnh đề.","Không sa vào mâu thuẫn.","Sử dụng ngôn ngữ đầy hình tượng và chính xác.","Tính xác định chính xác, rõ ràng rành mạch."],correctAnswer:3},
+    {id:26,question:"Quy luật đồng nhất là quy luật cơ bản của môn học nào?",options:["Siêu hình học và khoa học lý thuyết.","logic học biện chứng và logic học hình thức.","logic học hình thức.","Nhận thức luận và siêu hình học."],correctAnswer:2},
+    {id:27,question:"Trong logic học, thuật ngữ “đồng nhất trừu tượng” được hiểu như thế nào?",options:["Sự bất biến của sự vật trong hiện thực.","Sự giống nhau hoàn toàn của tư tưởng về đối tượng với đối tượng tư tưởng.","Đồng nhất các phẩm chất xác định của đối tượng tư tưởng được phản ánh trong tư duy với bản thân đối tượng tư tưởng trong hiện thực.","Tất cả phương án trên"],correctAnswer:2},
+    {id:28,question:"“Không được thay đổi đối tượng tư tưởng; tư tưởng lặp lại phải giống tư tưởng ban đầu; ngôn ngữ diễn đạt tư tưởng phải chính xác” là yêu cầu của quy luật nào?",options:["QL lý do đầy đủ.","QL đồng nhất.","QL phi mâu thuẫn.","QL loại trừ cái thứ ba."],correctAnswer:1},
+    {id:29,question:"Cặp phán đoán \"Người VN yêu nước\" và “Vài người VN không yêu nước” bị chi phối trực tiếp bởi quy luật nào?",options:["QL phi mâu thuẫn.","QL loại trừ cái thứ ba.","QL loại trừ cái thứ ba và QL đồng nhất.","QL loại trừ cái thứ ba, QL đồng nhất và QL phi mâu thuẫn."],correctAnswer:1},
+    {id:30,question:"Cặp phán đoán “Người VN yêu nước” và “Người VN không yêu nước” bị chi phối trực tiếp bởi quy luật nào?",options:["QL phi mâu thuẫn.","QL loại trừ cái thứ ba.","QL loại trừ cái thứ ba và QL lý do đầy đủ.","QL loại trừ cái thứ ba và QL phi mâu thuẫn."],correctAnswer:3},
+    {id:31,question:"Cơ sở của phép chứng minh phản chứng là quy luật nào?",options:["QL phi mâu thuẫn.","QL loại trừ cái thứ ba và QL đồng nhất.","QL loại trừ cái thứ ba và QL lý do đầy đủ.","QL loại trừ cái thứ ba và QL phi mâu thuẫn."],correctAnswer:3},
+    {id:32,question:"Quy luật loại trừ cái thứ ba và quy luật phi mâu thuẫn đảm bảo cho tư duy có được tính chất gì?",options:["Tính xác định chính xác, rõ ràng rành mạch.","Tính có căn cứ, được luận chứng, xác minh, chứng minh.","Tính phi mâu thuẫn; tính có căn cứ, được luận chứng, xác minh, chứng minh.","Tính phi mâu thuẫn, liên tục, nhất quán."],correctAnswer:3},
+    {id:33,question:"Quy luật lý do đầy đủ đảm bảo cho tư duy có được tính chất gì?",options:["Tính xác định chính xác, tính rõ ràng rành mạch.","Tính có căn cứ, được luận chứng, xác minh.","Tính phi mâu thuẫn; tính có căn cứ, được luận chứng, xác minh.","Tính phi mâu thuẫn, liên tục, nhất quán; tính chính xác, rõ ràng."],correctAnswer:1},
+    {id:34,question:"Mâu thuẫn (MT) nào xuất hiện một cách chủ quan, thể hiện dưới dạng cặp phán đoán trái ngược nhau và làm bế tắc tiến trình tư duy?",options:["MT biện chứng.","MT của nhận thức.","MT của tư duy.","MT logic."],correctAnswer:3},
+    {id:35,question:"Mâu thuẫn (MT) nào xuất hiện một cách khách quan, dưới dạng thống nhất và đấu tranh của các mặt đối lập, có vai trò là nguồn gốc, động lực của mọi sự vận động, phát triển diễn ra trong thế giới?",options:["MT xã hội.","MT tư duy.","MT tự nhiên.","Cả A), B) và C)."],correctAnswer:2},
+    {id:36,question:"Sử dụng từ ngữ một cách mập mờ, để sau đó có thể giải thích cùng một từ theo các cách khác nhau là vi phạm yêu cầu của quy luật (QL) nào?",options:["QL đồng nhất.","QL lý do đầy đủ.","QL không mâu thuẫn.","Không hề vi phạm các QL cơ bản của tư duy, tuy nhiên vi phạm quy tắc định nghĩa khái niệm."],correctAnswer:0},
+    {id:37,question:"Hình thức tư duy phản ánh những dấu hiệu bản chất của đối tượng tư tưởng được gọi là gì?",options:["Ý niệm.","Khái niệm.","Suy tưởng.","Phán đoán."],correctAnswer:1},
+    {id:38,question:"logic học gọi toàn thể các dấu hiệu bản chất của đối tượng tư tưởng là gì?",options:["Ngoại diên khái niệm.","Nội hàm khái niệm.","Bản chất của khái niệm.","Khái niệm."],correctAnswer:1},
+    {id:39,question:"logic học gọi toàn thể các phần tử có cùng dấu hiệu bản chất hợp thành đối tượng tư tưởng là gì?",options:["Khái niệm.","Nội hàm khái niệm.","Ngoại diên khái niệm.","A), B) và C) đều sai."],correctAnswer:2},
+    {id:40,question:"Khái niệm bao gồm những bộ phận nào?",options:["Từ và ý.","Âm (ký hiệu) và nghĩa.","Nội hàm và ngoại diên.","Tất cả các yếu tố của A), B) và C)."],correctAnswer:2},
+    {id:41,question:"Nội hàm (NH) và ngoại diên (ND) của khái niệm có quan hệ gì?",options:["NH càng sâu thì ND càng rộng, NH càng cạn thì ND càng hẹp.","NH càng cạn thì ND càng rộng, NH càng sâu thì ND càng hẹp.","NH càng rộng thì ND càng sâu, NH càng hẹp thì ND càng sâu.","NH càng hẹp thì ND càng cạn, NH càng rộng thì ND càng sâu."],correctAnswer:1},
+    {id:42,question:"Cách phân chia khái niệm (KN) nào sau đây đúng?",options:["KN thực và KN ảo.","KN chung và KN riêng.","KN riêng, KN vô hạn và KN hữu hạn.","Tất cả phương án trên"],correctAnswer:0},
+    {id:43,question:"Khái niệm thực phản ánh điều gì?",options:["Dấu hiệu bản chất của đối tượng tư tưởng (ĐTTT).","Dấu hiệu chung của một lớp ĐTTT.","Dấu hiệu bản chất của một lớp ĐTTT.","Tất cả phương án trên"],correctAnswer:3},
+    {id:44,question:"Xét trong khái niệm “Con người”, thì “Đàn ông” và “Đàn bà” là 2 khái niệm có quan hệ gì?",options:["QH mâu thuẫn.","QH đối chọi.","QH giao nhau.","QH đồng nhất."],correctAnswer:1},
+    {id:45,question:"“Con người” và \"Sinh thể\" là 2 khái niệm có quan hệ gì?",options:["QH giao nhau.","QH mâu thuẫn.","QH đồng nhất.","QH lệ thuộc."],correctAnswer:3},
+    {id:46,question:"Xác định quan hệ (QH) giữa 2 khái niệm, trong đó, nội hàm của chúng có dấu hiệu trái ngược nhau, còn ngoại diên của chúng chỉ là hai bộ phận khác nhau của ngoại diên một khái niệm thứ ba nào đó?",options:["QH mâu thuẫn.","QH đồng nhất.","QH đối chọi.","QH lệ thuộc."],correctAnswer:2},
+    {id:47,question:"Cặp khái niệm nào có quan hệ mâu thuẫn nhau?",options:["Đen - Trắng.","Đàn ông - Đàn bà.","Đỏ - Không đỏ.","A), B) và C) đều đúng."],correctAnswer:2},
+    {id:48,question:"Bổ sung để có một định nghĩa đúng: “Mở rộng khái niệm (KN) là thao tác logic...\"",options:["đi từ KN hạng sang KN loại.","đi từ KN riêng sang KN chung.","đi từ KN có nội hàm (NH) sâu, ngoại diên (ND) hẹp sang KN có NH cạn, ND rộng.","đi từ KN có NH cạn, ND rộng sang KN có NH sâu, ND hẹp."],correctAnswer:2},
+    {id:49,question:"Bổ sung để có một định nghĩa đúng: “Thu hẹp khái niệm (KN) là thao tác logic...”.",options:["Đi từ KN loại sang KN hạng.","Đi từ KN chung sang KN riêng.","Đi từ KN có nội hàm (NH) sâu, ngoại diên (ND) hẹp sang KN có NH cạn, ND rộng.","Đi từ KN có NH cạn ND rộng sang KN có NH sâu ND hẹp."],correctAnswer:3},
+    {id:50,question:"Mở rộng khái niệm (KN) có giới hạn cuối cùng là gì?",options:["KN đơn nhất.","Phạm trù.","KN vô hạn.","KN chung."],correctAnswer:1},
+    {id:51,question:"Thu hẹp khái niệm (KN) có giới hạn cuối cùng là gì?",options:["KN ảo.","Phạm trù.","KN cụ thể.","KN đơn nhất."],correctAnswer:3},
+    {id:52,question:"Thao tác logic làm rõ nội hàm của khái niệm (KN) được gọi là gì?",options:["Mở rộng và thu hẹp KN.","Phân chia KN.","Định nghĩa KN.","Phân chia và định nghĩa KN."],correctAnswer:2},
+    {id:53,question:"Muốn định nghĩa khái niệm (KN) đúng, thì KN định nghĩa và KN dùng để định nghĩa phải có quan hệ gì?",options:["QH giao nhau.","QH lệ thuộc.","QH đồng nhất.","QH đồng nhất và lệ thuộc."],correctAnswer:2},
+    {id:54,question:"Định nghĩa khái niệm đúng khi nào?",options:["Cân đối, rõ ràng, liên tục, nhất quán.","Cân đối, chính xác, rõ ràng.","Không thừa, không thiếu, không luẩn quẩn, liên tục, nhất quán.","Không thừa, không thiếu, không luẩn quẩn, rõ ràng, nhất quán."],correctAnswer:1},
+    {id:55,question:"Định nghĩa khái niệm cân đối khi nào?",options:["Không luẩn quẩn, không mơ hồ, không phủ định.","Không rộng, không hẹp, không mơ hồ.","Không rộng, không hẹp.","Tất cả phương án trên"],correctAnswer:2},
+    {id:56,question:"Định nghĩa khái niệm rõ ràng khi nào?",options:["Không luẩn quẩn, không phủ định, không mơ hồ.","Không rộng, không hẹp, không mơ hồ.","Không rộng, không hẹp.","Tất cả phương án trên"],correctAnswer:0},
+    {id:57,question:"Có thể định nghĩa \"Con người là thước đo của vạn vật\" được không?",options:["Được, vì đề cao con người.","Không được, vì ý tưởng hay nhưng không chuẩn xác.","Không, vì không xác định rõ nội hàm khái niệm \"con người\".","Không, vì không thể coi con người là thước đo của vạn vật được."],correctAnswer:2},
+    {id:58,question:"Phân chia khái niệm (KN) là thao tác gì?",options:["Liệt kê các KN lệ thuộc trong KN được lệ thuộc.","Vạch ra các KN cấp hạng trong KN cấp loại được phân chia.","Làm rõ ngoại diên KN được phân chia.","Làm rõ nội hàm KN được phân chia."],correctAnswer:1},
+    {id:59,question:"Phân chia khái niệm cân đối khi nào?",options:["Nhất quán, không vượt cấp.","Không vượt cấp, các khái niệm thành phần loại trừ nhau.","Không thừa, không thiếu.","Không thừa, không thiếu, không vượt cấp, các khái niệm thành phần loại trừ nhau."],correctAnswer:2},
+    {id:60,question:"Phân chia khái niệm đúng khi nào?",options:["Cân đối và nhất quán.","Cân đối, ngắn gọn, rõ ràng.","Không thừa, không thiếu, nhất quán, liên tục.","Cân đối, nhất quán, các thành phần phân chia loại trừ nhau và liên tục."],correctAnswer:3},
+    {id:61,question:"Bổ sung để được một định nghĩa đúng: “Phân đôi khái niệm (KN) là phân chia KN ra thành 2 KN có quan hệ... nhau”.",options:["tương phản","tương đương","mâu thuẫn"," Cả A và C."],correctAnswer:2},
+    {id:62,question:"Chia “Thành phố” ra thành “Quận/Huyện”, “Phường/Xã”, ... là thao tác gì?",options:["Phân đôi.","Phân loại.","Phân tích.","Tất cả phương án trên đều sai."],correctAnswer:2},
+    {id:63,question:"Phân chia khái niệm (KN) theo sự biến đổi dấu hiệu là gì?",options:["Thao tác vạch ra ngoại diên của KN được phân chia.","Thao tác chia KN cấp loại ra thành các KN cấp hạng của nó.","Thao tác chia chỉnh thể ra thành các bộ phận của nó.","A), B) và C) đều đúng."],correctAnswer:1},
+    {id:64,question:"“X là một số nguyên tố” là gì?",options:["Một mệnh đề.","Một câu.","Một phán đoán.","Tất cả phương án trên"],correctAnswer:1},
+    {id:65,question:"“Có lẽ hôm nay sinh viên lớp ta đang thi môn logic học” là phán đoán gì?",options:["PĐ đặc tính.","PĐ thời gian.","PĐ tình thái.","Cả A), B) và C)."],correctAnswer:2},
+    {id:66,question:"“Hầu hết sinh viên lớp ta đều dự thi môn logic học” là phán đoán gì?",options:["PĐ bộ phận.","PĐ toàn thể.","PĐ toàn thể - khẳng định.","PĐ tình thái - khẳng định."],correctAnswer:0},
+    {id:67,question:"Hãy xác định chủ từ (S) và vị từ (P) của phán đoán: “Tôi biết rằng anh ta rất tốt”.",options:["S = Tôi; P = biết rằng anh ta rất tốt.","S = Tôi; P = anh ta rất tốt.","S = Tôi biết rằng; P = anh ta tốt.","S = Tôi; P = anh ta"],correctAnswer:1},
+    {id:68,question:"“Đôi khi chuồn chuồn bay thấp mà trời không mưa” là phán đoán dạng nào?",options:["A","I","E","O"],correctAnswer:3},
+    {id:69,question:"“Hầu hết người Việt Nam đều là người yêu nước” và “Không có chuyện mọi người Việt Nam đều là người yêu nước” là hai phán đoán có quan hệ gì?",options:["QH mâu thuẫn.","QH lệ thuộc.","QH tương phản trên.","QH tương phản dưới."],correctAnswer:0},
+    {id:70,question:"Hãy xác định tính chu diên của chủ từ (S) và vị từ (P) trong phán đoán “Sinh viên lớp ta học giỏi môn logic học”.",options:["$S^+$; $P^-$","$S^+$ (chu diên); $P^+$ (chu diên)","$S^-$ (không chu diên); $P^-$","$S^-$; $P^+$"],correctAnswer:1},
+    {id:71,question:"Hãy xác định tính chu diên của chủ từ (S) và vị từ (P) trong phán đoán \"Người cộng sản không là kẻ bóc lột\".",options:["$S^+$; $P^+$","$S^+$; $P^-$","$S^-$; $P^-$","$S^-$; $P^+$"],correctAnswer:0},
+    {id:72,question:"Hãy xác định tính chu diên của chủ từ (S) và vị từ (P) trong phán đoán “Hầu hết người Việt Nam đều là người yêu nước”.",options:["$S^+$; $P^-$","$S^+$; $P^+$","$S^-$; $P^+$","$S^-$; $P^-$"],correctAnswer:3},
+    {id:73,question:"Hãy xác định tính chu diên của chủ từ (S) và vị từ (P) trong phán đoán \"Tam giác là hình có 3 cạnh\".",options:["$S^+$; $P^+$","$S^+$; $P^-$","$S^-$; $P^-$","$S^-$; $P^+$"],correctAnswer:0},
+    {id:74,question:"Hãy xác định tính chu diên của chủ từ (S) và vị từ (P) trong phán đoán “Vài người tốt nghiệp trung học là sinh viên”.",options:["$S^+$; $P^+$","$S^+$; $P^-$","$S^-$; $P^-$","$S^-$; $P^+$"],correctAnswer:2},
+    {id:75,question:"Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ lệ thuộc?",options:["$A \\to I; I \\to A$","$A \\to I; E \\to O$","$E \\to O$","$-A; E \\to O$"],correctAnswer:1},
+    {id:76,question:"Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ lệ thuộc?",options:["$A \\to I; I \\to A$","$A \\to I; \\sim A \\to \\sim I$","$E \\to O; A \\to I$","$A; E \\to O$"],correctAnswer:2},
+    {id:77,question:"Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ mâu thuẫn?",options:["$A \\leftrightarrow O; I \\leftrightarrow E$","$A \\leftrightarrow \\sim O; \\sim A \\leftrightarrow O$","$A \\leftrightarrow E; E \\leftrightarrow A$","$I \\leftrightarrow E$"],correctAnswer:1},
+    {id:78,question:"Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ tương phản trên (đối chọi)?",options:["$\\sim A \\to E; \\sim E \\to A$","$A \\to \\sim E; E \\to \\sim A$","$A \\to \\sim E; \\sim E \\to A$","$\\sim A \\to E; \\sim E \\to A$"],correctAnswer:1},
+    {id:79,question:"Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ tương phản dưới?",options:["$\\sim O \\to I; \\sim I \\to \\sim O$","$I \\to \\sim O; O \\to \\sim I$","$\\sim I \\to O; \\sim O \\to I$","$\\sim I \\to O; O \\to I$"],correctAnswer:2},
+    {id:80,question:"Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ mâu thuẫn?",options:["$A \\leftrightarrow O; I \\leftrightarrow E$","$A \\leftrightarrow \\sim O; O \\leftrightarrow \\sim A$","$A \\to \\sim E; O \\leftrightarrow \\sim A$","$\\sim I \\leftrightarrow E; \\sim O \\leftrightarrow A$"],correctAnswer:1},
+    {id:81,question:"Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ tương phản trên?",options:["$A \\to E; \\sim E \\to A$","$A \\to \\sim E; E \\to \\sim A$","$A \\to E; \\sim E \\to A$","$\\sim A \\to E; \\sim E \\to A$"],correctAnswer:1},
+    {id:82,question:"Dựa theo hình vuông logic, sơ đồ nào thể hiện quan hệ tương phản dưới?",options:["$\\sim I \\to O; \\sim O \\to I$","$I \\leftrightarrow \\sim O; O \\leftrightarrow \\sim I$","$I \\to O; \\sim I \\to \\sim O$","$\\sim I \\to O; O \\to I$"],correctAnswer:0},
+    {id:83,question:"Xét về cấu trúc của khái niệm, mệnh đề nào sau đây sai?",options:["Đồng nhất về nội hàm thì cũng đồng nhất về ngoại diên.","Đồng nhất về ngoại diên thì cũng đồng nhất về nội hàm.","Một khái niệm có thể có nhiều nội hàm khác nhau.","Khái niệm bao gồm nội hàm và ngoại diên, còn từ bao gồm ký (tín) hiệu và nghĩa."],correctAnswer:1},
+    {id:84,question:"Mệnh đề nào sau đây đúng?",options:["Điều kiện cần và đủ để PĐLK sai là các PĐTP cùng sai.","Muốn PĐLK đúng chỉ cần một PĐTP đúng là đủ.","PĐLK sai khi và chỉ khi các PĐTP cùng sai.","Phán đoán liên kết (PĐLK) đúng khi các phán đoán thành phần (PĐTP) đều cùng đúng."],correctAnswer:3},
+    {id:85,question:"Mệnh đề nào sau đây đúng?",options:["Điều kiện cần và đủ để PĐLCLH (tuyển yếu) sai là các PĐTP cùng sai.","PĐLCLH đúng khi và chỉ khi có một PĐTP đúng.","PĐLCLH sai khi và chỉ khi các PĐTP cùng đúng.","Phán đoán lựa chọn liên hợp (PĐLCLH) đúng khi các phán đoán thành phần (PĐTP) cùng đúng."],correctAnswer:0},
+    {id:86,question:"Mệnh đề nào sau đây đúng?",options:["Điều kiện cần và đủ để PĐLCGB (tuyển mạnh) sai là các PĐTP cùng sai.","PĐLCGB đúng khi và chỉ khi có một PĐTP đúng (và cái kia sai).","PĐLCGB sai khi và chỉ khi các PĐTP cùng sai.","Phán đoán lựa chọn gạt bỏ (PĐLCGB) đúng khi các phán đoán thành phần (PĐTP) cùng đúng."],correctAnswer:1},
+    {id:87,question:"Mệnh đề nào sau đây đúng?",options:["Phán đoán kéo theo (PĐKT) sai khi và chỉ khi hậu từ sai.","PĐKT sai khi tiền từ đúng và hậu từ sai.","Muốn PĐKT đúng thì tiền từ phải đúng và hậu từ phải sai.","PĐKT đúng khi và chỉ khi tiền từ và hậu từ có cùng giá trị logic."],correctAnswer:1},
+    {id:88,question:"“Lý luận và thực hành phải đi đôi với nhau” là phán đoán gì?",options:["PĐ liên kết.","PĐ lựa chọn.","PĐ kéo theo.","A), B) và C) đều sai."],correctAnswer:3},
+    {id:89,question:"“Hai đường thẳng đồng phẳng song song với nhau thì chúng không cắt nhau” là phán đoán gì?",options:["PĐ liên kết.","PĐ kéo theo.","PĐ kéo theo kép (tương đương).","PĐ lựa chọn gạt bỏ."],correctAnswer:2},
+    {id:90,question:"Nếu phán đoán $P \\to Q$ đúng thì mệnh đề nào sau đây cũng đúng?",options:["P là điều kiện cần của Q.","Q là điều kiện đủ của P.","P là điều kiện cần và đủ của Q.","P là điều kiện đủ của Q."],correctAnswer:3},
+    {id:91,question:"Nếu phán đoán $\\neg P \\to \\neg Q$ đúng thì mệnh đề nào sau đây cũng đúng?",options:["Q là điều kiện cần của P (vì tương đương Q -> P).","Q là điều kiện cần của P.","P là điều kiện cần và đủ của Q.","P là điều kiện đủ của Q."],correctAnswer:0},
+    {id:92,question:"Nếu phán đoán $P \\leftrightarrow Q$ đúng thì mệnh đề nào sau đây cũng đúng?",options:["P, Q là điều kiện cần và đủ của nhau.","P là điều kiện đủ của Q.","P là điều kiện cần của Q.","Q là điều kiện cần của P."],correctAnswer:0},
+    {id:93,question:"Tìm phán đoán tương đương logic với: $\\neg a \\to b$",options:["$\\neg b \\to \\neg a$","$a \\to b$","$\\neg a \\to \\neg b$","$\\neg b \\to a$"],correctAnswer:3},
+    {id:94,question:"Tìm phán đoán tương đương logic với: $a \\to \\neg b$",options:["$\\neg(a \\wedge b)$","$\\neg a \\wedge \\neg b$","$\\neg(\\neg a \\wedge \\neg b)$","$a \\vee b$"],correctAnswer:0},
+    {id:95,question:"Tìm phán đoán nào tương đương logic với: $\\neg a \\to b$.",options:["$\\neg a \\vee b$","$\\neg(a \\wedge b)$","$a \\wedge b$","$a \\vee b$"],correctAnswer:3},
+    {id:96,question:"Loại suy luận hợp logic nào đảm bảo chắc chắn kết luận xác thực nếu có các tiền đề xác thực?",options:["Suy luận diễn dịch.","Suy luận quy nạp.","Suy luận tương tự.","Cả A), B) và C)."],correctAnswer:0},
+    {id:97,question:"Từ phán đoán “Một số sinh viên học giỏi logic học”, bằng phép đổi chất kết luận được rút ra là gì?",options:["Số sinh viên còn lại học không giỏi logic học.","Một số người học giỏi logic học là sinh viên.","Một số sinh viên không phải là người không học giỏi logic học.","Không thực hiện phép đổi chất được."],correctAnswer:2},
+    {id:98,question:"Thao tác logic đi từ một hay vài tiền đề có quan hệ logic với nhau để rút ra một kết luận được gọi là gì?",options:["Diễn dịch trực tiếp.","Quy nạp hoàn toàn.","Suy luận.","Phán đoán."],correctAnswer:2}
+].map(item => ({...item, explanation: `Đáp án đúng là: ${['A','B','C','D'][item.correctAnswer]}.`}));
+
+const rawPart2 = [
+    { id: 99, q: "Thao tác logic đi từ một tiền đề để rút ra một kết luận được gọi là gì?", opts: ["Diễn dịch trực tiếp.", "Suy luận gián tiếp.", "Quy nạp khoa học.", "Tất cả phương án trên đều sai."], a: 0, exp: "Diễn dịch trực tiếp là suy luận chỉ từ một tiền đề." },
+    { id: 100, q: "Thao tác logic đi từ hai tiền đề có quan hệ logic với nhau để rút ra một phán đoán mới làm kết luận được gọi là gì?", opts: ["Diễn dịch trực tiếp.", "Quy nạp hoàn toàn.", "Suy luận gián tiếp.", "Tất cả phương án trên đều sai."], a: 2, exp: "Suy luận từ 2 tiền đề trở lên là suy luận gián tiếp." },
+    { id: 101, q: "Từ các phán đoán “Mọi sinh viên đều phải học Logic học” và “Một số người không học Logic học” bằng phép suy luận nào có thể rút ra kết luận: “Một số người không phải là sinh viên”?", opts: ["Suy luận diễn dịch trực tiếp.", "Suy luận gián tiếp.", "Quy nạp hoàn toàn.", "Không suy ra được."], a: 1, exp: "Đây là Tam đoạn luận đơn (Baroco - Hình 2), là suy luận gián tiếp." },
+    { id: 102, q: "Cho các phán đoán: “Mọi kim loại đều dẫn điện”, “Đồng là kim loại”. Kết luận nào sau đây được rút ra bằng suy luận hợp logic?", opts: ["Đồng dẫn điện.", "Kim loại đều là đồng.", "Đồng không dẫn điện.", "Không rút ra được kết luận nào."], a: 0, exp: "Tam đoạn luận hình 1 : $M \\to P, S \\to M \\Rightarrow S \\to P$." },
+    { id: 103, q: "Cho các phán đoán: “Mọi tam giác đều có ba cạnh”, “Đây là một tam giác”. Kết luận nào sau đây đúng?", opts: ["Đây có ba cạnh.", "Đây không có ba cạnh.", "Đây là hình vuông.", "Không rút ra được kết luận nào."], a: 0, exp: "Tam đoạn luận hình 1, kiểu AAA." },
+    { id: 104, q: "Cho các phán đoán: “Nếu trời mưa thì đường ướt”, “Đường ướt”. Kết luận nào sau đây là hợp logic?", opts: ["Trời mưa.", "Trời không mưa.", "Không thể kết luận gì chắc chắn.", "Trời có thể mưa hoặc không."], a: 2, exp: "Quy tắc sai lầm: Ngộ nhận hậu thiết (Affirming the consequent). $((P \\to Q) \\land Q) \\not\\to P$." },
+    { id: 105, q: "Cho các phán đoán: “Nếu học chăm thì thi đỗ”, “Không thi đỗ”. Kết luận nào sau đây là hợp logic?", opts: ["Không học chăm.", "Học chăm.", "Thi đỗ.", "Không thể kết luận."], a: 0, exp: "Quy tắc Modus Tollens: $((P \\to Q) \\land \\neg Q) \\to \\neg P$." },
+    { id: 106, q: "Cho các phán đoán: “Nếu là sinh viên thì phải học tập”, “Không học tập”. Kết luận nào sau đây là hợp logic?", opts: ["Là sinh viên.", "Không là sinh viên.", "Phải học tập.", "Không thể kết luận."], a: 1, exp: "Modus Tollens: Không học tập $\\to$ Không là sinh viên." },
+    { id: 107, q: "Cho các phán đoán: “Nếu trời nắng thì đi học”, “Không đi học”. Kết luận nào sau đây là hợp logic?", opts: ["Trời nắng.", "Trời không nắng.", "Đi học.", "Không thể kết luận."], a: 1, exp: "Modus Tollens: Không đi học $\\to$ Trời không nắng." },
+    { id: 108, q: "Cho các phán đoán: “Nếu là người Việt Nam thì yêu nước”, “Không yêu nước”. Kết luận nào sau đây là hợp logic?", opts: ["Là người Việt Nam.", "Không là người Việt Nam.", "Yêu nước.", "Không thể kết luận."], a: 1, exp: "Modus Tollens: Không yêu nước $\\to$ Không là người VN." },
+    { id: 109, q: "Cho các phán đoán: “Nếu học Logic học thì tư duy tốt”, “Học Logic học”. Kết luận nào sau đây là hợp logic?", opts: ["Tư duy tốt.", "Không tư duy tốt.", "Không học Logic học.", "Không thể kết luận."], a: 0, exp: "Modus Ponens: $((P \\to Q) \\land P) \\to Q$." },
+    { id: 110, q: "Cho các phán đoán: “Nếu học Logic học thì tư duy tốt”, “Không tư duy tốt”. Kết luận nào sau đây là hợp logic?", opts: ["Không học Logic học.", "Học Logic học.", "Tư duy tốt.", "Không thể kết luận."], a: 0, exp: "Modus Tollens." },
+    { id: 111, q: "Cho các phán đoán: “Nếu học chăm thì thi đỗ”, “Học chăm”. Kết luận nào sau đây là hợp logic?", opts: ["Thi đỗ.", "Không thi đỗ.", "Không học chăm.", "Không thể kết luận."], a: 0, exp: "Modus Ponens." },
+    { id: 112, q: "Cho các phán đoán: “Nếu là sinh viên thì phải học Logic học”, “Là sinh viên”. Kết luận nào sau đây là hợp logic?", opts: ["Phải học Logic học.", "Không học Logic học.", "Không là sinh viên.", "Không thể kết luận."], a: 0, exp: "Modus Ponens." },
+    { id: 113, q: "Cho các phán đoán: “Nếu là sinh viên thì phải học Logic học”, “Không học Logic học”. Kết luận nào sau đây là hợp logic?", opts: ["Là sinh viên.", "Không là sinh viên.", "Phải học Logic học.", "Không thể kết luận."], a: 1, exp: "Modus Tollens." },
+    { id: 114, q: "Cho các phán đoán: “Nếu trời mưa thì đường ướt”, “Trời không mưa”. Kết luận nào sau đây là hợp logic?", opts: ["Đường không ướt.", "Đường ướt.", "Không thể kết luận.", "Trời mưa."], a: 2, exp: "Sai lầm: Phủ định tiền đề (Denying the antecedent)." },
+    { id: 115, q: "Cho các phán đoán: “Nếu trời mưa thì đường ướt”, “Đường không ướt”. Kết luận nào sau đây là hợp logic?", opts: ["Trời không mưa.", "Trời mưa.", "Đường ướt.", "Không thể kết luận."], a: 0, exp: "Modus Tollens." },
+    { id: 116, q: "Cho các phán đoán: “Nếu học Logic học thì tư duy tốt”, “Tư duy tốt”. Kết luận nào sau đây là hợp logic?", opts: ["Học Logic học.", "Không học Logic học.", "Không thể kết luận.", "Tư duy không tốt."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 117, q: "Cho các phán đoán: “Nếu học chăm thì thi đỗ”, “Không học chăm”. Kết luận nào sau đây là hợp logic?", opts: ["Không thi đỗ.", "Thi đỗ.", "Không thể kết luận.", "Học chăm."], a: 2, exp: "Sai lầm: Phủ định tiền đề." },
+    { id: 118, q: "Cho các phán đoán: “Nếu là sinh viên thì phải học tập”, “Phải học tập”. Kết luận nào sau đây là hợp logic?", opts: ["Là sinh viên.", "Không là sinh viên.", "Không thể kết luận.", "Phải học Logic học."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 119, q: "Cho các phán đoán: “Nếu là người Việt Nam thì yêu nước”, “Yêu nước”. Kết luận nào sau đây là hợp logic?", opts: ["Là người Việt Nam.", "Không là người Việt Nam.", "Không thể kết luận.", "Không yêu nước."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 120, q: "Cho các phán đoán: “Nếu học Logic học thì tư duy tốt”, “Không học Logic học”. Kết luận nào sau đây là hợp logic?", opts: ["Không tư duy tốt.", "Tư duy tốt.", "Không thể kết luận.", "Học Logic học."], a: 2, exp: "Sai lầm: Phủ định tiền đề." },
+    { id: 121, q: "Cho các phán đoán: “Nếu học chăm thì thi đỗ”, “Thi đỗ”. Kết luận nào sau đây là hợp logic?", opts: ["Học chăm.", "Không học chăm.", "Không thể kết luận.", "Không thi đỗ."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 122, q: "Cho các phán đoán: “Nếu là sinh viên thì phải học Logic học”, “Học Logic học”. Kết luận nào sau đây là hợp logic?", opts: ["Là sinh viên.", "Không là sinh viên.", "Không thể kết luận.", "Phải học Logic học."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 123, q: "Cho các phán đoán: “Nếu trời mưa thì đường ướt”, “Đường ướt”. Kết luận nào sau đây là hợp logic?", opts: ["Trời mưa.", "Trời không mưa.", "Không thể kết luận.", "Đường không ướt."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 124, q: "Cho các phán đoán: “Nếu học Logic học thì tư duy tốt”, “Không tư duy tốt”. Kết luận nào sau đây là hợp logic?", opts: ["Không học Logic học.", "Học Logic học.", "Tư duy tốt.", "Không thể kết luận."], a: 0, exp: "Modus Tollens." },
+    { id: 125, q: "Cho các phán đoán: “Nếu là sinh viên thì phải học Logic học”, “Không là sinh viên”. Kết luận nào sau đây là hợp logic?", opts: ["Không học Logic học.", "Phải học Logic học.", "Không thể kết luận.", "Là sinh viên."], a: 2, exp: "Sai lầm: Phủ định tiền đề." },
+    { id: 126, q: "Cho các phán đoán: “Nếu học chăm thì thi đỗ”, “Không thi đỗ”. Kết luận nào sau đây là hợp logic?", opts: ["Không học chăm.", "Học chăm.", "Thi đỗ.", "Không thể kết luận."], a: 0, exp: "Modus Tollens." },
+    { id: 127, q: "Cho các phán đoán: “Nếu trời mưa thì đường ướt”, “Trời mưa”. Kết luận nào sau đây là hợp logic?", opts: ["Đường ướt.", "Đường không ướt.", "Trời không mưa.", "Không thể kết luận."], a: 0, exp: "Modus Ponens." },
+    { id: 128, q: "Cho các phán đoán: “Nếu là người Việt Nam thì yêu nước”, “Là người Việt Nam”. Kết luận nào sau đây là hợp logic?", opts: ["Yêu nước.", "Không yêu nước.", "Không là người Việt Nam.", "Không thể kết luận."], a: 0, exp: "Modus Ponens." },
+    { id: 129, q: "Cho các phán đoán: “Nếu học Logic học thì tư duy tốt”, “Học Logic học”. Kết luận nào sau đây là hợp logic?", opts: ["Tư duy tốt.", "Không tư duy tốt.", "Không học Logic học.", "Không thể kết luận."], a: 0, exp: "Modus Ponens." },
+    { id: 130, q: "Cho các phán đoán: “Nếu là sinh viên thì phải học Logic học”, “Là sinh viên”. Kết luận nào sau đây là hợp logic?", opts: ["Phải học Logic học.", "Không học Logic học.", "Không là sinh viên.", "Không thể kết luận."], a: 0, exp: "Modus Ponens." },
+    { id: 131, q: "Cho các phán đoán: “Nếu học chăm thì thi đỗ”, “Không học chăm”. Kết luận nào sau đây là hợp logic?", opts: ["Không thi đỗ.", "Thi đỗ.", "Không thể kết luận.", "Học chăm."], a: 2, exp: "Sai lầm: Phủ định tiền đề." },
+    { id: 132, q: "Cho các phán đoán: “Nếu trời mưa thì đường ướt”, “Đường không ướt”. Kết luận nào sau đây là hợp logic?", opts: ["Trời không mưa.", "Trời mưa.", "Đường ướt.", "Không thể kết luận."], a: 0, exp: "Modus Tollens." },
+    { id: 133, q: "Cho các phán đoán: “Nếu là người Việt Nam thì yêu nước”, “Không yêu nước”. Kết luận nào sau đây là hợp logic?", opts: ["Không là người Việt Nam.", "Là người Việt Nam.", "Yêu nước.", "Không thể kết luận."], a: 0, exp: "Modus Tollens." },
+    { id: 134, q: "Cho các phán đoán: “Nếu học Logic học thì tư duy tốt”, “Không tư duy tốt”. Kết luận nào sau đây là hợp logic?", opts: ["Không học Logic học.", "Học Logic học.", "Tư duy tốt.", "Không thể kết luận."], a: 0, exp: "Modus Tollens." },
+    { id: 135, q: "Cho các phán đoán: “Nếu là sinh viên thì phải học Logic học”, “Không học Logic học”. Kết luận nào sau đây là hợp logic?", opts: ["Không là sinh viên.", "Là sinh viên.", "Phải học Logic học.", "Không thể kết luận."], a: 0, exp: "Modus Tollens." },
+    { id: 136, q: "Cho các phán đoán: “Nếu học chăm thì thi đỗ”, “Học chăm”. Kết luận nào sau đây là hợp logic?", opts: ["Thi đỗ.", "Không thi đỗ.", "Không học chăm.", "Không thể kết luận."], a: 0, exp: "Modus Ponens." },
+    { id: 137, q: "Cho các phán đoán: “Nếu trời mưa thì đường ướt”, “Trời không mưa”. Kết luận nào sau đây là hợp logic?", opts: ["Đường không ướt.", "Đường ướt.", "Không thể kết luận.", "Trời mưa."], a: 2, exp: "Sai lầm: Phủ định tiền đề." },
+    { id: 138, q: "Cho các phán đoán: “Nếu là người Việt Nam thì yêu nước”, “Yêu nước”. Kết luận nào sau đây là hợp logic?", opts: ["Là người Việt Nam.", "Không là người Việt Nam.", "Không thể kết luận.", "Không yêu nước."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 139, q: "Cho các phán đoán: “Nếu học Logic học thì tư duy tốt”, “Tư duy tốt”. Kết luận nào sau đây là hợp logic?", opts: ["Học Logic học.", "Không học Logic học.", "Không thể kết luận.", "Tư duy không tốt."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 140, q: "Cho các phán đoán: “Nếu là sinh viên thì phải học Logic học”, “Học Logic học”. Kết luận nào sau đây là hợp logic?", opts: ["Là sinh viên.", "Không là sinh viên.", "Không thể kết luận.", "Phải học Logic học."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 141, q: "Cho các phán đoán: “Nếu học chăm thì thi đỗ”, “Thi đỗ”. Kết luận nào sau đây là hợp logic?", opts: ["Học chăm.", "Không học chăm.", "Không thể kết luận.", "Không thi đỗ."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 142, q: "Cho các phán đoán: “Nếu trời mưa thì đường ướt”, “Đường ướt”. Kết luận nào sau đây là hợp logic?", opts: ["Trời mưa.", "Trời không mưa.", "Không thể kết luận.", "Đường không ướt."], a: 2, exp: "Sai lầm: Ngộ nhận hậu thiết." },
+    { id: 143, q: "Cho các phán đoán: “Nếu là người Việt Nam thì yêu nước”, “Không là người Việt Nam”. Kết luận nào sau đây là hợp logic?", opts: ["Không yêu nước.", "Yêu nước.", "Không thể kết luận.", "Là người Việt Nam."], a: 2, exp: "Sai lầm: Phủ định tiền đề." },
+    { id: 144, q: "Cho các phán đoán: “Nếu học Logic học thì tư duy tốt”, “Không học Logic học”. Kết luận nào sau đây là hợp logic?", opts: ["Không tư duy tốt.", "Tư duy tốt.", "Không thể kết luận.", "Học Logic học."], a: 2, exp: "Sai lầm: Phủ định tiền đề." },
+    { id: 145, q: "Cho các phán đoán: “Nếu là sinh viên thì phải học Logic học”, “Không là sinh viên”. Kết luận nào sau đây là hợp logic?", opts: ["Không học Logic học.", "Phải học Logic học.", "Không thể kết luận.", "Là sinh viên."], a: 2, exp: "Sai lầm: Phủ định tiền đề." },
+    { id: 146, q: "Phán đoán nào sau đây là hằng đúng?", opts: ["$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\to \\neg P$", "$\\neg P \\to P$"], a: 0, exp: "Luật bài trung: $P \\lor \\neg P$ luôn đúng." },
+    { id: 147, q: "Phán đoán nào sau đây là hằng sai?", opts: ["$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\to P$", "$\\neg P \\lor P$"], a: 1, exp: "Luật mâu thuẫn: $P \\land \\neg P$ luôn sai." },
+    { id: 148, q: "Công thức logic nào sau đây là hằng đúng?", opts: ["$(P \\to Q) \\leftrightarrow (\\neg Q \\to \\neg P)$", "$P \\land \\neg P$", "$P \\leftrightarrow \\neg P$", "$\\neg (P \\lor \\neg P)$"], a: 0, exp: "Luật phản đảo." },
+    { id: 149, q: "Công thức logic nào sau đây là hằng sai?", opts: ["$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\to P$", "$\\neg P \\lor P$"], a: 1, exp: "Luật mâu thuẫn." },
+    { id: 150, q: "Công thức logic nào sau đây là không phải là hằng đúng?", opts: ["$P \\lor \\neg P$", "$P \\to P$", "$(P \\to Q) \\leftrightarrow (\\neg Q \\to \\neg P)$", "$P \\land \\neg P$"], a: 3, exp: "$P \\land \\neg P$ là hằng sai." },
+    { id: 151, q: "Công thức logic nào sau đây là hằng đúng?", opts: ["$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\leftrightarrow \\neg P$", "$\\neg (P \\lor \\neg P)$"], a: 0, exp: "Luật bài trung." },
+    { id: 152, q: "Công thức logic nào sau đây là hằng sai?", opts: ["$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\to P$", "$\\neg P \\lor P$"], a: 1, exp: "Luật mâu thuẫn." },
+    { id: 153, q: "Công thức logic nào sau đây là không phải là hằng đúng?", opts: ["$P \\lor \\neg P$", "$P \\to P$", "$(P \\to Q) \\leftrightarrow (\\neg Q \\to \\neg P)$", "$P \\land \\neg P$"], a: 3, exp: "$P \\land \\neg P$ là hằng sai." },
+    { id: 154, q: "Xác định giá trị logic: $(P \\lor Q) \\to (\\neg P \\land Q)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$1 \\to (0 \\land 0) = 0$." },
+    { id: 155, q: "Xác định giá trị logic: $(P \\land Q) \\lor (\\neg P \\to Q)$ khi $P=\\text{S}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$0 \\lor (1 \\to 1) = 0 \\lor 1 = 1$." },
+    { id: 156, q: "Xác định giá trị logic: $(P \\to Q) \\land (\\neg Q \\to \\neg P)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$(1 \\to 0) \\land ... = 0 \\land ... = 0$." },
+    { id: 157, q: "Xác định giá trị logic: $(P \\leftrightarrow Q) \\lor (\\neg P \\land Q)$ khi $P=\\text{S}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$(0 \\leftrightarrow 0) \\lor ... = 1 \\lor ... = 1$." },
+    { id: 158, q: "Xác định giá trị logic: $(P \\lor Q) \\land (\\neg P \\lor \\neg Q)$ khi $P=\\text{Đ}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$1 \\land (0 \\lor 0) = 0$." },
+    { id: 159, q: "Xác định giá trị logic: $(P \\to Q) \\lor (Q \\to P)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$(1 \\to 0) \\lor (0 \\to 1) = 0 \\lor 1 = 1$." },
+    { id: 160, q: "Xác định giá trị logic: $(P \\land \\neg Q) \\to (Q \\lor \\neg P)$ khi $P=\\text{S}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$(0 \\land 0) \\to ... = 0 \\to ... = 1$." },
+    { id: 161, q: "Xác định giá trị logic: $(P \\to (Q \\land R)) \\leftrightarrow ((P \\to Q) \\land (P \\to R))$ khi $P=\\text{Đ}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "VT: $1 \\to 0 = 0$. VP: $1 \\land 0 = 0$. $0 \\leftrightarrow 0 = 1$." },
+    { id: 162, q: "Xác định giá trị logic: $(P \\lor (Q \\land R)) \\leftrightarrow ((P \\lor Q) \\land (P \\lor R))$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "VT: $0$. VP: $1 \\land 0 = 0$. $0 \\leftrightarrow 0 = 1$." },
+    { id: 163, q: "Xác định giá trị logic: $(P \\land (Q \\lor R)) \\leftrightarrow ((P \\land Q) \\lor (P \\land R))$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "VT: 0. VP: $0 \\lor 0 = 0$. $0 \\leftrightarrow 0 = 1$." },
+    { id: 164, q: "Xác định giá trị logic: $(P \\lor Q) \\leftrightarrow ((P \\to Q) \\land (Q \\to P))$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "VT: 1. VP: $0 \\land 1 = 0$. $1 \\leftrightarrow 0 = 0$." },
+    { id: 165, q: "Xác định giá trị logic: $(P \\leftrightarrow Q) \\leftrightarrow ((P \\to Q) \\land (Q \\to P))$ khi $P=\\text{S}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "VT: 1. VP: $1 \\land 1 = 1$. $1 \\leftrightarrow 1 = 1$." },
+    { id: 166, q: "Xác định giá trị logic: $\\neg (P \\land Q) \\leftrightarrow (\\neg P \\lor \\neg Q)$ khi $P=\\text{Đ}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "De Morgan." },
+    { id: 167, q: "Xác định giá trị logic: $\\neg (P \\lor Q) \\leftrightarrow (\\neg P \\land \\neg Q)$ khi $P=\\text{S}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "De Morgan." },
+    { id: 168, q: "Xác định giá trị logic: $(P \\to Q) \\leftrightarrow (\\neg P \\lor Q)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Định nghĩa phép kéo theo." },
+    { id: 169, q: "Xác định giá trị logic: $(P \\to Q) \\leftrightarrow (\\neg Q \\to \\neg P)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Phản đảo." },
+    { id: 170, q: "Xác định giá trị logic: $(P \\lor Q) \\to (Q \\lor P)$ khi $P=\\text{S}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Giao hoán." },
+    { id: 171, q: "Xác định giá trị logic: $(P \\land Q) \\to (Q \\land P)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Giao hoán." },
+    { id: 172, q: "Xác định giá trị logic: $(P \\lor (Q \\lor R)) \\leftrightarrow ((P \\lor Q) \\lor R)$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Kết hợp." },
+    { id: 173, q: "Xác định giá trị logic: $(P \\land (Q \\land R)) \\leftrightarrow ((P \\land Q) \\land R)$ khi $P=\\text{Đ}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Kết hợp." },
+    { id: 174, q: "Xác định giá trị logic: $(P \\lor Q) \\land R \\leftrightarrow (P \\land R) \\lor (Q \\land R)$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Phân phối." },
+    { id: 175, q: "Xác định giá trị logic: $(P \\land Q) \\lor R \\leftrightarrow (P \\lor R) \\land (Q \\lor R)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Phân phối." },
+    { id: 176, q: "Phán đoán nào sau đây là hằng đúng?", opts: ["$(P \\land Q) \\to P$", "$P \\to (P \\land Q)$", "$P \\land \\neg P$", "$\\neg (P \\lor \\neg P)$"], a: 0, exp: "Luật đơn giản hóa." },
+    { id: 177, q: "Phán đoán nào sau đây là hằng sai?", opts: ["$(P \\land Q) \\to P$", "$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\to P$"], a: 2, exp: "Mâu thuẫn." },
+    { id: 178, q: "Công thức logic nào sau đây là hằng đúng?", opts: ["$(P \\lor Q) \\to (Q \\lor P)$", "$(P \\land Q) \\to (Q \\land P)$", "$(P \\to Q) \\leftrightarrow (\\neg Q \\to \\neg P)$", "Tất cả các đáp án trên"], a: 3, exp: "Tất cả đều đúng." },
+    { id: 179, q: "Công thức logic nào sau đây là hằng sai?", opts: ["$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\to P$", "$\\neg P \\lor P$"], a: 1, exp: "Mâu thuẫn." },
+    { id: 180, q: "Xác định giá trị logic: $(P \\lor Q) \\land (\\neg P \\lor Q)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$1 \\land 0 = 0$." },
+    { id: 181, q: "Xác định giá trị logic: $(P \\land Q) \\lor (\\neg P \\land Q)$ khi $P=\\text{S}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$0 \\lor 1 = 1$." },
+    { id: 182, q: "Xác định giá trị logic: $(P \\to Q) \\land (P \\to \\neg Q)$ khi $P=\\text{Đ}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$1 \\land 0 = 0$." },
+    { id: 183, q: "Xác định giá trị logic: $(P \\leftrightarrow Q) \\land (\\neg P \\lor Q)$ khi $P=\\text{S}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\land 1 = 1$." },
+    { id: 184, q: "Xác định giá trị logic: $(P \\lor Q) \\land (\\neg P \\lor \\neg Q)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "XOR: $1 \\land 1 = 1$." },
+    { id: 185, q: "Xác định giá trị logic: $(P \\to Q) \\lor (\\neg P \\to Q)$ khi $P=\\text{S}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\lor 0 = 1$." },
+    { id: 186, q: "Xác định giá trị logic: $(P \\land \\neg Q) \\lor (Q \\land \\neg P)$ khi $P=\\text{Đ}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$0 \\lor 0 = 0$." },
+    { id: 187, q: "Xác định giá trị logic: $(P \\to Q) \\land (Q \\to R) \\to (P \\to R)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$(0 \\land 1) \\to 1 = 0 \\to 1 = 1$." },
+    { id: 188, q: "Xác định giá trị logic: $(P \\lor Q) \\land (Q \\lor R)$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\land 1 = 1$." },
+    { id: 189, q: "Xác định giá trị logic: $(P \\land Q) \\lor (P \\land R)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$0 \\lor 1 = 1$." },
+    { id: 190, q: "Xác định giá trị logic: $(P \\lor Q) \\to (P \\lor Q \\lor R)$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Hằng đúng." },
+    { id: 191, q: "Xác định giá trị logic: $(P \\land Q \\land R) \\to (P \\land Q)$ khi $P=\\text{Đ}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$0 \\to 1 = 1$." },
+    { id: 192, q: "Xác định giá trị logic: $(P \\lor Q \\lor R) \\to (P \\lor Q)$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\to 1 = 1$." },
+    { id: 193, q: "Xác định giá trị logic: $(P \\to Q) \\land (\\neg Q \\to R)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$0 \\land 1 = 0$." },
+    { id: 194, q: "Xác định giá trị logic: $(P \\leftrightarrow Q) \\lor (R \\land \\neg Q)$ khi $P=\\text{S}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\lor 1 = 1$." },
+    { id: 195, q: "Xác định giá trị logic: $(P \\lor Q) \\land (R \\to Q)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$1 \\land 0 = 0$." },
+    { id: 196, q: "Xác định giá trị logic: $(P \\land Q) \\lor (R \\to Q)$ khi $P=\\text{S}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$0 \\lor 0 = 0$." },
+    { id: 197, q: "Xác định giá trị logic: $(P \\to (Q \\lor R)) \\land (Q \\to R)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\land 1 = 1$." },
+    { id: 198, q: "Xác định giá trị logic: $(P \\land (Q \\lor R)) \\lor (\\neg P \\land Q)$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$0 \\lor 1 = 1$." },
+    { id: 199, q: "Xác định giá trị logic: $(P \\lor Q) \\leftrightarrow ((P \\to Q) \\land (\\neg Q \\to \\neg P))$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "VT: 1. VP: 0." },
+    { id: 200, q: "Xác định giá trị logic: $(P \\land Q) \\leftrightarrow ((P \\lor Q) \\land (P \\to Q) \\land (Q \\to P))$ khi $P=\\text{S}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "VT: 0. VP: $0 \\land ... = 0$. $0 \\leftrightarrow 0 = 1$." },
+    { id: 201, q: "Phán đoán nào sau đây là hằng đúng?", opts: ["$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\leftrightarrow \\neg P$", "$\\neg(P \\lor \\neg P)$"], a: 0, exp: "Luật bài trung." },
+    { id: 202, q: "Phán đoán nào sau đây là hằng sai?", opts: ["$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\to P$", "$\\neg P \\lor P$"], a: 1, exp: "Mâu thuẫn." },
+    { id: 203, q: "Công thức logic nào sau đây là hằng đúng?", opts: ["$(P \\to Q) \\leftrightarrow (\\neg Q \\to \\neg P)$", "$P \\land \\neg P$", "$P \\leftrightarrow \\neg P$", "$\\neg(P \\lor \\neg P)$"], a: 0, exp: "Phản đảo." },
+    { id: 204, q: "Xác định giá trị logic: $(P \\lor Q) \\to (\\neg Q \\lor P)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\to 1 = 1$." },
+    { id: 205, q: "Xác định giá trị logic: $(P \\land Q) \\to (P \\lor Q)$ khi $P=\\text{S}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$0 \\to 1 = 1$." },
+    { id: 206, q: "Xác định giá trị logic: $(P \\to Q) \\lor (\\neg Q \\to P)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$0 \\lor 1 = 1$." },
+    { id: 207, q: "Xác định giá trị logic: $(P \\land \\neg Q) \\to (Q \\to P)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\to 1 = 1$." },
+    { id: 208, q: "Xác định giá trị logic: $(P \\lor (Q \\land R)) \\to ((P \\lor Q) \\land (P \\lor R))$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$0 \\to 0 = 1$." },
+    { id: 209, q: "Xác định giá trị logic: $((P \\to Q) \\land (Q \\to R)) \\to (P \\to R)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Bắc cầu." },
+    { id: 210, q: "Xác định giá trị logic: $(P \\leftrightarrow Q) \\to ((P \\to Q) \\land (Q \\to P))$ khi $P=\\text{S}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Tương đương logic." },
+    { id: 211, q: "Xác định giá trị logic: $(P \\to (Q \\lor R)) \\leftrightarrow ((P \\to Q) \\lor (P \\to R))$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\leftrightarrow 1 = 1$." },
+    { id: 212, q: "Xác định giá trị logic: $(P \\land (Q \\lor R)) \\leftrightarrow ((P \\land Q) \\lor (P \\land R))$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Phân phối." },
+    { id: 213, q: "Xác định giá trị logic: $\\neg(P \\land Q) \\leftrightarrow (\\neg P \\lor \\neg Q)$ khi $P=\\text{Đ}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "De Morgan." },
+    { id: 214, q: "Xác định giá trị logic: $\\neg(P \\lor Q) \\leftrightarrow (\\neg P \\land \\neg Q)$ khi $P=\\text{S}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "De Morgan." },
+    { id: 215, q: "Xác định giá trị logic: $(P \\to Q) \\leftrightarrow (\\neg P \\lor Q)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Định nghĩa phép kéo theo." },
+    { id: 216, q: "Xác định giá trị logic: $(P \\to Q) \\leftrightarrow (\\neg Q \\to \\neg P)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Phản đảo." },
+    { id: 217, q: "Xác định giá trị logic: $(P \\lor Q) \\to (Q \\lor P)$ khi $P=\\text{S}, Q=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Giao hoán." },
+    { id: 218, q: "Xác định giá trị logic: $(P \\land Q) \\to (Q \\land P)$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Giao hoán." },
+    { id: 219, q: "Xác định giá trị logic: $(P \\lor (Q \\lor R)) \\leftrightarrow ((P \\lor Q) \\lor R)$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Kết hợp." },
+    { id: 220, q: "Xác định giá trị logic: $(P \\land (Q \\land R)) \\leftrightarrow ((P \\land Q) \\land R)$ khi $P=\\text{Đ}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Kết hợp." },
+    { id: 221, q: "Xác định giá trị logic: $(P \\lor Q) \\land R \\leftrightarrow (P \\land R) \\lor (Q \\land R)$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Phân phối." },
+    { id: 222, q: "Xác định giá trị logic: $(P \\land Q) \\lor R \\leftrightarrow (P \\lor R) \\land (Q \\lor R)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "Phân phối." },
+    { id: 223, q: "Xác định giá trị logic: $(P \\to Q) \\land (\\neg Q \\to R)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$0 \\land 1 = 0$." },
+    { id: 224, q: "Xác định giá trị logic: $(P \\leftrightarrow Q) \\lor (R \\land \\neg Q)$ khi $P=\\text{S}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\lor 1 = 1$." },
+    { id: 225, q: "Xác định giá trị logic: $(P \\lor Q) \\land (R \\to Q)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$1 \\land 0 = 0$." },
+    { id: 226, q: "Xác định giá trị logic: $(P \\land Q) \\lor (R \\to Q)$ khi $P=\\text{S}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "$0 \\lor 0 = 0$." },
+    { id: 227, q: "Xác định giá trị logic: $(P \\to (Q \\lor R)) \\land (Q \\to R)$ khi $P=\\text{Đ}, Q=\\text{S}, R=\\text{Đ}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$1 \\land 1 = 1$." },
+    { id: 228, q: "Xác định giá trị logic: $(P \\land (Q \\lor R)) \\lor (\\neg P \\land Q)$ khi $P=\\text{S}, Q=\\text{Đ}, R=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "$0 \\lor 1 = 1$." },
+    { id: 229, q: "Xác định giá trị logic: $(P \\lor Q) \\leftrightarrow ((P \\to Q) \\land (\\neg Q \\to \\neg P))$ khi $P=\\text{Đ}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 1, exp: "VT: 1. VP: 0." },
+    { id: 230, q: "Xác định giá trị logic: $(P \\land Q) \\leftrightarrow ((P \\lor Q) \\land (P \\to Q) \\land (Q \\to P))$ khi $P=\\text{S}, Q=\\text{S}$.", opts: ["Đ", "S", "Không xác định", " Cả A và B"], a: 0, exp: "VT: 0. VP: 0." },
+    { id: 231, q: "Phán đoán nào sau đây là hằng đúng?", opts: ["$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\leftrightarrow \\neg P$", "$\\neg(P \\lor \\neg P)$"], a: 0, exp: "Luật bài trung." },
+    { id: 232, q: "Phán đoán nào sau đây là hằng sai?", opts: ["$P \\lor \\neg P$", "$P \\land \\neg P$", "$P \\to P$", "$\\neg P \\lor P$"], a: 1, exp: "Mâu thuẫn." },
+    { id: 233, q: "Công thức logic nào sau đây không phải là hằng đúng?", opts: ["$P \\lor \\neg P$", "$P \\to P$", "$(P \\to Q) \\leftrightarrow (\\neg Q \\to \\neg P)$", "$P \\land \\neg P$"], a: 3, exp: "$P \\land \\neg P$ là hằng sai." }
 ];
 
-// --- LOGIC ỨNG DỤNG ---
+const part2 = rawPart2.map(item => ({
+    id: item.id,
+    question: formatLogicText(item.q),
+    options: item.opts.map(o => formatLogicText(o)),
+    correctAnswer: item.a,
+    explanation: formatLogicText(item.exp)
+}));
+
+const questions = [...part1, ...part2];
+
+// --- LOGIC GIAO DIỆN ---
 const quizContainer = document.getElementById('quiz-container');
 const questionGrid = document.getElementById('question-grid');
 const progressBar = document.getElementById('progress-bar');
@@ -1426,8 +564,7 @@ const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 
-// Trạng thái người dùng
-let userAnswers = {}; // { qId: { selectedIndex: number, isCorrect: boolean } }
+let userAnswers = {};
 
 function initQuiz() {
     renderQuestions();
@@ -1441,7 +578,7 @@ function renderQuestions() {
             <div class="flex flex-col sm:flex-row justify-between items-start mb-4 gap-2">
                 <h3 class="text-lg font-bold text-gray-800 flex-1">
                     <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 text-sm mr-2 shadow-sm">${q.id}</span>
-                    <span class="math-content font-medium text-gray-700">${q.question}</span>
+                    <span class="question-text font-medium text-gray-700">${q.question}</span>
                 </h3>
                 <span id="status-${q.id}" class="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide hidden whitespace-nowrap"></span>
             </div>
@@ -1452,15 +589,15 @@ function renderQuestions() {
                         <input type="radio" name="q-${q.id}" value="${i}" class="peer sr-only" onchange="checkAnswer(${q.id}, ${i})">
                         <div id="opt-${q.id}-${i}" class="option-label p-3 rounded-lg border border-gray-200 hover:bg-gray-50 peer-focus:ring-2 peer-focus:ring-blue-200 flex items-center transition-colors">
                             <span class="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-gray-100 text-gray-500 rounded-full text-xs font-bold mr-3 border border-gray-300 group-hover:bg-white transition-all">${String.fromCharCode(65 + i)}</span>
-                            <span class="math-content text-gray-700 flex-1">${opt}</span>
+                            <span class="text-gray-700 flex-1">${opt}</span>
                             <i id="icon-${q.id}-${i}" class="fas fa-check-circle text-green-600 ml-3 text-lg hidden"></i>
                             <i id="icon-wrong-${q.id}-${i}" class="fas fa-times-circle text-red-600 ml-3 text-lg hidden"></i>
                         </div>
                     </label>
                 `).join('')}
             </div>
-            <div id="explanation-${q.id}" class="mt-4 p-4 bg-blue-50 text-blue-800 text-sm rounded-lg border border-blue-100 hidden animate-fade-in">
-                <p><strong><i class="fas fa-lightbulb text-yellow-500 mr-1"></i> Đáp án đúng:</strong> ${String.fromCharCode(65 + q.correctAnswer)}</p>
+            <div id="explanation-${q.id}" class="mt-4 p-4 bg-green-50 text-green-800 text-sm rounded-lg border border-green-100 hidden animate-fade-in">
+                <p><strong><i class="fas fa-lightbulb text-yellow-500 mr-1"></i> Giải thích:</strong> <span class="text-gray-800">${q.explanation || 'Đang cập nhật lời giải chi tiết.'}</span></p>
             </div>
         </div>
     `).join('');
@@ -1483,28 +620,19 @@ function checkAnswer(qId, selectedIndex) {
     const q = questions.find(x => x.id === qId);
     if (!q) return;
 
-    // Ngăn chặn chọn lại nếu đã trả lời (tùy chọn, hiện tại cho phép chọn lại để sửa sai nhưng không tính lại điểm nếu muốn strict)
-    // Ở đây ta cho phép người dùng thay đổi câu trả lời, update trạng thái mới nhất.
-    
     const isCorrect = selectedIndex === q.correctAnswer;
-    
-    // Save state
     userAnswers[qId] = { selectedIndex, isCorrect };
 
-    // Update UI for this question
+    // Update UI
     const options = document.getElementsByName(`q-${qId}`);
     options.forEach((opt, idx) => {
         const labelDiv = document.getElementById(`opt-${qId}-${idx}`);
         const iconCheck = document.getElementById(`icon-${qId}-${idx}`);
         const iconWrong = document.getElementById(`icon-wrong-${qId}-${idx}`);
         
-        // Reset styles
         labelDiv.classList.remove('correct-answer', 'wrong-answer');
         iconCheck.classList.add('hidden');
         iconWrong.classList.add('hidden');
-        
-        // Disable other options to prevent spamming? 
-        // Let's keep it interactive.
     });
 
     const selectedDiv = document.getElementById(`opt-${qId}-${selectedIndex}`);
@@ -1516,14 +644,10 @@ function checkAnswer(qId, selectedIndex) {
     } else {
         selectedDiv.classList.add('wrong-answer');
         document.getElementById(`icon-wrong-${qId}-${selectedIndex}`).classList.remove('hidden');
-        
-        // Show correct answer visually as well
         correctDiv.classList.add('correct-answer');
-        // Optional: show check icon on correct answer even if wrong selected?
-        // document.getElementById(`icon-${qId}-${q.correctAnswer}`).classList.remove('hidden');
     }
 
-    // Show status tag
+    // Status Tag
     const statusSpan = document.getElementById(`status-${qId}`);
     statusSpan.classList.remove('hidden', 'text-green-700', 'text-red-700', 'bg-green-100', 'bg-red-100');
     if(isCorrect) {
@@ -1537,16 +661,17 @@ function checkAnswer(qId, selectedIndex) {
     // Show explanation
     const expl = document.getElementById(`explanation-${qId}`);
     expl.classList.remove('hidden');
+    
+    // Re-render math in explanation if needed
+    if(window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([expl]);
+    }
 
     // Update Sidebar Button
     const btn = document.getElementById(`btn-q-${qId}`);
-    btn.classList.remove('bg-white', 'text-gray-600', 'border-gray-200', 'bg-green-500', 'bg-red-500', 'text-white', 'border-green-600', 'border-red-600');
-    
-    if (isCorrect) {
-        btn.classList.add('bg-green-500', 'text-white', 'border-green-600');
-    } else {
-        btn.classList.add('bg-red-500', 'text-white', 'border-red-600');
-    }
+    btn.className = isCorrect 
+        ? "h-10 rounded-lg text-sm font-medium border border-green-600 bg-green-500 text-white shadow-sm"
+        : "h-10 rounded-lg text-sm font-medium border border-red-600 bg-red-500 text-white shadow-sm";
 
     updateStats();
 }
@@ -1567,18 +692,13 @@ function updateStats() {
 function scrollToQuestion(id) {
     const el = document.getElementById(`q-${id}`);
     if (el) {
-        // Scroll adjustment for fixed header/footer
         const yOffset = -20; 
         const y = el.getBoundingClientRect().top + document.getElementById('main-content').scrollTop + yOffset;
-        
-        // Use scrollIntoView for simplicity in modern browsers
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         
-        // Highlight effect
         el.classList.add('ring-2', 'ring-blue-400');
         setTimeout(() => el.classList.remove('ring-2', 'ring-blue-400'), 1500);
 
-        // Close sidebar on mobile
         if (window.innerWidth < 768) {
             sidebar.classList.add('-translate-x-full');
             overlay.classList.add('hidden');
@@ -1592,17 +712,12 @@ function resetQuiz() {
         initQuiz();
         document.querySelectorAll('input[type="radio"]').forEach(inp => {
             inp.checked = false;
-            inp.disabled = false;
         });
-        // Reset sidebar buttons visual
-        const btns = document.querySelectorAll('[id^="btn-q-"]');
-        btns.forEach(btn => {
-            btn.className = "h-10 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-100 transition-all bg-white text-gray-600 shadow-sm";
-        });
+        document.querySelectorAll('[id^="explanation-"]').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('[id^="status-"]').forEach(el => el.classList.add('hidden'));
     }
 }
 
-// Mobile Menu
 menuBtn.addEventListener('click', () => {
     sidebar.classList.toggle('-translate-x-full');
     overlay.classList.toggle('hidden');
@@ -1613,10 +728,8 @@ overlay.addEventListener('click', () => {
     overlay.classList.add('hidden');
 });
 
-// Init
 window.onload = initQuiz;
 
 </script>
 </body>
-
 </html>
